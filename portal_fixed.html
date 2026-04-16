@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OIL GROUP — Учебный портал</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f4f0;color:#1a1a1a;min-height:100vh}
+:root{--navy:#0C2340;--gold:#C9A84C;--gold-light:#F5E6C0;--teal:#085041;--teal-light:#E1F5EE;--red:#791F1F;--red-light:#FCEBEB}
+
+/* ===== LOGIN ===== */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#0C2340 0%,#1a3a5c 100%)}
+.login-box{background:#fff;border-radius:16px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 8px 40px rgba(0,0,0,0.18)}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.login-logo-dot{width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.login-logo-text{font-size:20px;font-weight:700;color:var(--navy);letter-spacing:.02em}
+.login-subtitle{font-size:13px;color:#666;margin-bottom:28px}
+.login-label{font-size:12px;font-weight:600;color:#444;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.login-input{width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;font-family:inherit;color:#1a1a1a;background:#fafafa;margin-bottom:14px;transition:border .15s}
+.login-input:focus{outline:none;border-color:var(--gold);background:#fff}
+.login-btn{width:100%;padding:12px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s;margin-top:4px}
+.login-btn:hover{opacity:.88}
+.login-err{font-size:12px;color:var(--red);min-height:18px;margin-top:6px;text-align:center}
+.login-hint{font-size:11px;color:#aaa;text-align:center;margin-top:16px}
+
+/* ===== APP SHELL ===== */
+#app{display:none;min-height:100vh;flex-direction:column}
+.topbar{background:var(--navy);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.tb-brand{color:#fff;font-size:15px;font-weight:600}
+.tb-role{font-size:10px;color:var(--gold);font-weight:600;letter-spacing:.07em;margin-left:4px}
+.tb-user{font-size:12px;color:#ffffff88}
+.logout-btn{font-size:12px;color:#ffffff66;background:none;border:1px solid #ffffff22;border-radius:6px;padding:4px 10px;cursor:pointer;font-family:inherit;transition:all .15s}
+.logout-btn:hover{color:#fff;border-color:#ffffff55}
+
+.main-layout{display:flex;flex:1}
+
+/* ===== SIDEBAR ===== */
+.sidebar{width:220px;background:#fff;border-right:1px solid #e8e8e4;padding:16px 0;flex-shrink:0;min-height:calc(100vh - 52px)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;font-size:13px;color:#555;transition:all .15s;border-left:3px solid transparent}
+.nav-item:hover{background:#f8f6f0;color:#1a1a1a}
+.nav-item.active{background:#f5e6c022;color:var(--navy);font-weight:600;border-left-color:var(--gold)}
+.nav-icon{font-size:16px;width:20px;text-align:center}
+.nav-sep{height:1px;background:#f0ede6;margin:8px 16px}
+.nav-section{font-size:10px;color:#aaa;padding:12px 20px 4px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+/* ===== CONTENT ===== */
+.content-area{flex:1;padding:24px;overflow-y:auto;max-width:860px}
+.page{display:none}.page.show{display:block}
+
+/* cards */
+.card{background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.card-h{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.card-sub{font-size:13px;color:#666;line-height:1.6}
+
+/* welcome */
+.welcome-banner{background:var(--navy);border-radius:12px;padding:22px 24px;margin-bottom:16px;position:relative;overflow:hidden}
+.wb-gold{position:absolute;right:-20px;top:-20px;width:120px;height:120px;border-radius:50%;background:var(--gold);opacity:.08}
+.wb-title{color:#fff;font-size:18px;font-weight:700;margin-bottom:4px}
+.wb-sub{color:#ffffff88;font-size:13px;margin-bottom:16px}
+.wb-prog-label{color:#C9A84C;font-size:11px;font-weight:600;margin-bottom:6px}
+.wb-prog-bg{height:6px;background:#ffffff22;border-radius:3px;overflow:hidden}
+.wb-prog-fill{height:6px;background:var(--gold);border-radius:3px;transition:width .6s ease}
+.wb-prog-pct{color:#fff;font-size:12px;margin-top:6px}
+
+/* stats */
+.stats-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.stat-card{flex:1;min-width:90px;background:#fff;border:1px solid #e8e8e4;border-radius:10px;padding:14px 16px}
+.stat-n{font-size:26px;font-weight:700;color:var(--navy)}
+.stat-l{font-size:11px;color:#888;margin-top:2px}
+.stat-trend{font-size:11px;margin-top:4px}
+.trend-up{color:#085041}.trend-down{color:#A32D2D}
+
+/* module list */
+.module-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #e8e8e4;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:all .15s;background:#fff}
+.module-item:hover{border-color:var(--gold);background:#fdf8ee}
+.module-item.done{border-color:#9FE1CB;background:#f0faf7}
+.module-item.locked{opacity:.5;cursor:not-allowed}
+.mi-num{width:28px;height:28px;border-radius:50%;border:2px solid #ddd;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#888;flex-shrink:0}
+.module-item.done .mi-num{background:var(--teal);border-color:var(--teal);color:#fff}
+.mi-info{flex:1}
+.mi-title{font-size:13px;font-weight:600;color:#1a1a1a}
+.mi-meta{font-size:11px;color:#888;margin-top:2px}
+.mi-arrow{color:#ccc;font-size:18px}
+.module-item.done .mi-arrow{color:var(--teal)}
+
+/* tags */
+.tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:10px;margin-right:5px;margin-top:4px}
+.tag-gold{background:#faeeda;color:#633806}
+.tag-teal{background:#e1f5ee;color:#085041}
+.tag-blue{background:#e6f1fb;color:#0c447c}
+.tag-gray{background:#f1efe8;color:#444}
+.tag-red{background:#fcebeb;color:#791f1f}
+
+/* checklist */
+.cl-list{list-style:none;margin-top:8px}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #f0ede6;font-size:13px;color:#333;line-height:1.5}
+.cl-item:last-child{border-bottom:none}
+.cl-cb{width:18px;height:18px;border:2px solid #ddd;border-radius:5px;cursor:pointer;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:11px;color:#fff}
+.cl-cb.chk{background:var(--teal);border-color:var(--teal)}
+
+/* script viewer */
+.script-phases{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.sp-btn{padding:5px 12px;border-radius:16px;border:1.5px solid #ddd;background:#fff;font-size:12px;font-weight:500;color:#666;cursor:pointer;font-family:inherit;transition:all .15s}
+.sp-btn.act{background:var(--navy);color:#fff;border-color:var(--navy)}
+.script-block{display:none}.script-block.show{display:block}
+.line-m{background:#f0f5ff;border-left:3px solid #378ADD;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:8px;font-size:13px;line-height:1.6}
+.line-k{background:#f8f6f0;border-left:3px solid #ccc;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:8px;font-size:13px;line-height:1.6;color:#555;font-style:italic}
+.line-tip{background:#faeeda;border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:8px;font-size:12px;color:#633806}
+.who{font-size:10px;font-weight:700;letter-spacing:.06em;margin-bottom:4px}
+.who-m{color:#185FA5}.who-k{color:#888}
+
+/* obj tabs */
+.obj-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.ot-btn{padding:5px 13px;border-radius:16px;border:1.5px solid #ddd;background:#fff;font-size:12px;color:#666;cursor:pointer;font-family:inherit;transition:all .15s}
+.ot-btn.sel{background:#fcebeb;color:#791f1f;border-color:#f09595;font-weight:600}
+
+/* HR dashboard */
+.tr-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f0ede6}
+.tr-row:last-child{border-bottom:none}
+.avatar{width:32px;height:32px;border-radius:50%;background:#e6f1fb;color:#0c447c;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tr-info{flex:1}
+.tr-name{font-size:13px;font-weight:600;color:#1a1a1a}
+.tr-meta{font-size:11px;color:#888;margin-top:1px}
+.prog-mini{display:flex;align-items:center;gap:8px;min-width:110px}
+.pb{flex:1;height:5px;background:#eee;border-radius:3px;overflow:hidden}
+.pf{height:5px;border-radius:3px}
+.pf-green{background:#1D9E75}.pf-gold{background:var(--gold)}.pf-blue{background:#378ADD}
+.pct{font-size:11px;color:#888;min-width:30px;text-align:right}
+.status-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.s-active{background:#1D9E75}.s-idle{background:#EF9F27}.s-new{background:#378ADD}
+
+/* log */
+.log-row{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #f0ede6;font-size:12px}
+.log-row:last-child{border-bottom:none}
+.log-time{color:#aaa;min-width:42px;flex-shrink:0}
+.log-who{font-weight:600;color:#333;min-width:75px;flex-shrink:0}
+.log-what{color:#666;flex:1}
+.log-tag{font-size:10px;padding:2px 7px;border-radius:8px;flex-shrink:0}
+.lt-d{background:#e1f5ee;color:#085041}.lt-s{background:#e6f1fb;color:#0c447c}.lt-l{background:#eeedfe;color:#3c3489}
+
+/* send progress button */
+.send-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s;margin-top:12px}
+.send-btn:hover{opacity:.88}
+.send-btn:disabled{opacity:.5;cursor:not-allowed}
+.send-status{font-size:12px;margin-left:10px;color:var(--teal);font-weight:500}
+
+/* filter btns */
+.filter-row{display:flex;gap:6px;margin-bottom:12px}
+.fb{padding:5px 14px;border-radius:16px;border:1.5px solid #ddd;background:#fff;font-size:12px;color:#666;cursor:pointer;font-family:inherit;transition:all .15s}
+.fb.act{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.two-col{grid-template-columns:1fr}.sidebar{display:none}.main-layout{flex-direction:column}}
+
+.divider{border:none;border-top:1px solid #f0ede6;margin:12px 0}
+.section-label{font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.05em;margin:14px 0 8px}
+.notify{background:#e1f5ee;border:1px solid #9FE1CB;border-radius:8px;padding:10px 14px;font-size:12px;color:#085041;margin-bottom:12px}
+.warn{background:#faeeda;border:1px solid #FAC775;border-radius:8px;padding:10px 14px;font-size:12px;color:#633806;margin-bottom:12px}
+
+/* ===== QUIZ ===== */
+.quiz-wrap{background:#f8f6f0;border:1px solid #e8e8e4;border-radius:10px;padding:18px 20px;margin-top:4px}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.quiz-title{font-size:13px;font-weight:700;color:var(--navy)}
+.quiz-attempts{font-size:11px;color:#888}
+.quiz-q{margin-bottom:16px}
+.quiz-q-text{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:8px;line-height:1.5}
+.quiz-opt{display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border:1.5px solid #ddd;border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:13px;color:#333;transition:all .15s;background:#fff}
+.quiz-opt:hover{border-color:var(--gold);background:#fdf8ee}
+.quiz-opt.selected{border-color:var(--navy);background:#e6f1fb;color:var(--navy);font-weight:600}
+.quiz-opt.correct{border-color:#1D9E75;background:#e1f5ee;color:#085041;font-weight:600}
+.quiz-opt.wrong{border-color:#A32D2D;background:#fcebeb;color:#791f1f}
+.quiz-opt-letter{width:22px;height:22px;border-radius:50%;background:#f0ede6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.quiz-submit{display:inline-flex;align-items:center;gap:7px;padding:9px 22px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;transition:opacity .15s}
+.quiz-submit:hover{opacity:.88}
+.quiz-submit:disabled{opacity:.4;cursor:not-allowed}
+.quiz-result{border-radius:10px;padding:14px 18px;margin-top:12px;font-size:13px;line-height:1.6}
+.quiz-result.pass{background:#e1f5ee;border:1px solid #9FE1CB;color:#085041}
+.quiz-result.fail{background:#fcebeb;border:1px solid #f09595;color:#791f1f}
+.quiz-start-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 22px;background:var(--gold);color:var(--navy);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px;transition:opacity .15s}
+.quiz-start-btn:hover{opacity:.88}
+.pdf-viewer-wrap{margin-top:14px;border:1px solid #e8e8e4;border-radius:10px;overflow:hidden;background:#f4f4f0}
+.pdf-viewer-header{background:var(--navy);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.pdf-viewer-title{color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
+.pdf-viewer-title span{background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px}
+.pdf-open-btn{font-size:11px;color:var(--gold);background:none;border:1px solid #C9A84C44;border-radius:6px;padding:4px 10px;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.pdf-open-btn:hover{background:#C9A84C22}
+.pdf-iframe{width:100%;height:500px;border:none;display:block;background:#fff}
+.pdfhide{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="160" height="36" viewBox="0 0 420.93 93.91" xmlns="http://www.w3.org/2000/svg" overflow="hidden"><g><path d="M65.77 40.53C65.77 21.48 51.7 7.22 32.84 7.22 14.07 7.22 0 21.48 0 40.53 0 59.58 14.07 73.84 32.93 73.84 51.7 73.84 65.77 59.58 65.77 40.53ZM49.54 40.44 49.54 40.44C49.54 50.2 42.03 57.98 32.84 57.98 23.65 57.98 16.14 50.19 16.14 40.44 16.14 30.78 23.65 22.89 32.84 22.89 42.03 22.89 49.54 30.77 49.54 40.44ZM88.19 12.67 88.19 12.67C88.19 7.98 84.44 4.23 79.75 4.23 75.06 4.23 71.31 7.98 71.31 12.67 71.31 17.36 75.06 21.11 79.75 21.11 84.44 21.11 88.19 17.36 88.19 12.67ZM86.88 71.59 86.88 71.59 86.88 29.09 72.62 29.09 72.62 71.59 86.88 71.59ZM110.62 71.59 110.62 71.59 110.62 0 96.36 0 96.36 71.59 110.62 71.59ZM179.57 36.87 179.57 36.87 148.89 36.87 148.89 49.54 161.56 49.54C161 56.39 156.77 59.86 149.27 59.86 139.32 59.86 133.41 52.17 133.41 40.53 133.41 29.46 139.23 22.05 148.7 22.05 154.61 22.05 159.02 24.3 161.65 30.96L176.1 24.67C170.94 12.47 161.84 7.69 149.17 7.69 130.03 7.69 117.36 20.64 117.36 40.53 117.36 60.33 129.74 73.27 148.98 73.27 170 73.27 180.89 57.51 179.57 36.87ZM216.73 42.03 216.73 28.62C215.98 28.53 214.76 28.43 213.92 28.43 207.92 28.43 203.22 31.34 200.69 36.22L200.69 29.09 186.43 29.09 186.43 71.59 200.69 71.59 200.69 53.39C200.69 45.51 204.07 41.38 210.73 41.38 212.6 41.37 215.13 41.56 216.73 42.03ZM267.67 50.29C267.67 36.97 257.63 27.49 243.37 27.49 229.11 27.49 219.07 36.97 219.07 50.29 219.07 63.71 229.11 73.18 243.37 73.18 257.63 73.18 267.67 63.7 267.67 50.29ZM252.57 50.29C252.57 55.64 248.44 59.95 243.38 59.95 238.32 59.95 234.19 55.63 234.19 50.29 234.19 44.94 238.32 40.63 243.38 40.63 248.44 40.62 252.57 44.94 252.57 50.29ZM316.65 56.01 316.65 29.08 302.39 29.08 302.39 53.2C302.39 58.45 299.95 61.08 295.45 61.08 290.67 61.08 288.51 58.64 288.51 53.2L288.51 29.08 274.25 29.08 274.25 56.01C274.25 67.36 281.38 73.37 295.45 73.37 309.52 73.37 316.65 67.36 316.65 56.01ZM326.22 29.08 326.22 93.91 340.48 93.91 340.48 67.46C343.76 71.31 348.08 73 353.05 73 364.5 73 373.32 63.15 373.32 50.48 373.32 37.53 364.41 27.68 352.87 27.68 347.62 27.68 343.11 29.84 340.49 33.78L340.49 29.09ZM340.01 50.29C340.01 44.94 344.14 40.63 349.2 40.63 354.36 40.63 358.49 44.95 358.49 50.29 358.49 55.73 354.36 60.05 349.2 60.05 344.14 60.05 340.01 55.63 340.01 50.29Z" fill="#ED6E1C" fill-rule="evenodd"/><path d="M420.93 25.42C420.93 28.46 420.32 31.37 419.22 34.03 418.08 36.79 416.41 39.27 414.33 41.35 412.24 43.44 409.76 45.11 407.01 46.25 404.34 47.35 401.43 47.96 398.39 47.96 395.35 47.96 392.44 47.35 389.78 46.25 387.02 45.11 384.54 43.44 382.46 41.36 380.37 39.27 378.7 36.79 377.56 34.05 376.46 31.38 375.85 28.47 375.85 25.43 375.85 22.39 376.46 19.48 377.56 16.82 378.7 14.05 380.37 11.57 382.45 9.5 384.53 7.42 387.02 5.74 389.77 4.6 392.43 3.5 395.34 2.89 398.38 2.89L420.91 2.89 420.91 25.42ZM404.61 31.63C405.42 30.82 406.08 29.85 406.52 28.78 406.94 27.76 407.18 26.62 407.18 25.42L407.18 16.64 398.4 16.64C397.2 16.64 396.07 16.88 395.04 17.3 393.97 17.74 393 18.4 392.19 19.21 391.38 20.02 390.72 20.99 390.28 22.06 389.86 23.08 389.62 24.22 389.62 25.42 389.62 26.62 389.86 27.76 390.28 28.78 390.72 29.85 391.38 30.82 392.19 31.63 393 32.44 393.97 33.1 395.04 33.54 396.06 33.96 397.2 34.2 398.4 34.2 399.6 34.2 400.74 33.97 401.76 33.54 402.83 33.1 403.8 32.44 404.61 31.63Z" fill="#ED6E1C" fill-rule="evenodd"/></g></svg>
+    </div>
+    <div class="login-subtitle">Учебный портал для сотрудников</div>
+
+    <div class="login-label">Логин</div>
+    <input class="login-input" type="text" id="loginInput" placeholder="например: alexey.ivanov" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"/>
+
+    <div class="login-label">Пароль</div>
+    <div style="position:relative">
+      <input class="login-input" type="password" id="passInput" placeholder="Ваш пароль" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" style="margin-bottom:0;padding-right:42px"/>
+      <button onclick="togglePass()" id="eyeBtn" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#aaa;padding:0;line-height:1" title="Показать/скрыть пароль">👁</button>
+    </div>
+    <div style="height:14px"></div>
+
+    <button class="login-btn" onclick="doLogin()">Войти в портал</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-hint">Логин и пароль выдаёт HR при оформлении</div>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app" style="display:none;flex-direction:column">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <svg width="90" height="20" viewBox="0 0 420.93 93.91" xmlns="http://www.w3.org/2000/svg" overflow="hidden"><g><path d="M65.77 40.53C65.77 21.48 51.7 7.22 32.84 7.22 14.07 7.22 0 21.48 0 40.53 0 59.58 14.07 73.84 32.93 73.84 51.7 73.84 65.77 59.58 65.77 40.53ZM49.54 40.44C49.54 50.2 42.03 57.98 32.84 57.98 23.65 57.98 16.14 50.19 16.14 40.44 16.14 30.78 23.65 22.89 32.84 22.89 42.03 22.89 49.54 30.77 49.54 40.44ZM88.19 12.67C88.19 7.98 84.44 4.23 79.75 4.23 75.06 4.23 71.31 7.98 71.31 12.67 71.31 17.36 75.06 21.11 79.75 21.11 84.44 21.11 88.19 17.36 88.19 12.67ZM86.88 71.59 86.88 29.09 72.62 29.09 72.62 71.59ZM110.62 71.59 110.62 0 96.36 0 96.36 71.59ZM179.57 36.87 148.89 36.87 148.89 49.54 161.56 49.54C161 56.39 156.77 59.86 149.27 59.86 139.32 59.86 133.41 52.17 133.41 40.53 133.41 29.46 139.23 22.05 148.7 22.05 154.61 22.05 159.02 24.3 161.65 30.96L176.1 24.67C170.94 12.47 161.84 7.69 149.17 7.69 130.03 7.69 117.36 20.64 117.36 40.53 117.36 60.33 129.74 73.27 148.98 73.27 170 73.27 180.89 57.51 179.57 36.87ZM216.73 42.03 216.73 28.62C215.98 28.53 214.76 28.43 213.92 28.43 207.92 28.43 203.22 31.34 200.69 36.22L200.69 29.09 186.43 29.09 186.43 71.59 200.69 71.59 200.69 53.39C200.69 45.51 204.07 41.38 210.73 41.38 212.6 41.37 215.13 41.56 216.73 42.03ZM267.67 50.29C267.67 36.97 257.63 27.49 243.37 27.49 229.11 27.49 219.07 36.97 219.07 50.29 219.07 63.71 229.11 73.18 243.37 73.18 257.63 73.18 267.67 63.7 267.67 50.29ZM252.57 50.29C252.57 55.64 248.44 59.95 243.38 59.95 238.32 59.95 234.19 55.63 234.19 50.29 234.19 44.94 238.32 40.63 243.38 40.63 248.44 40.62 252.57 44.94 252.57 50.29ZM316.65 56.01 316.65 29.08 302.39 29.08 302.39 53.2C302.39 58.45 299.95 61.08 295.45 61.08 290.67 61.08 288.51 58.64 288.51 53.2L288.51 29.08 274.25 29.08 274.25 56.01C274.25 67.36 281.38 73.37 295.45 73.37 309.52 73.37 316.65 67.36 316.65 56.01ZM326.22 29.08 326.22 93.91 340.48 93.91 340.48 67.46C343.76 71.31 348.08 73 353.05 73 364.5 73 373.32 63.15 373.32 50.48 373.32 37.53 364.41 27.68 352.87 27.68 347.62 27.68 343.11 29.84 340.49 33.78L340.49 29.09ZM340.01 50.29C340.01 44.94 344.14 40.63 349.2 40.63 354.36 40.63 358.49 44.95 358.49 50.29 358.49 55.73 354.36 60.05 349.2 60.05 344.14 60.05 340.01 55.63 340.01 50.29Z" fill="#ED6E1C" fill-rule="evenodd"/><path d="M420.93 25.42C420.93 28.46 420.32 31.37 419.22 34.03 418.08 36.79 416.41 39.27 414.33 41.35 412.24 43.44 409.76 45.11 407.01 46.25 404.34 47.35 401.43 47.96 398.39 47.96 395.35 47.96 392.44 47.35 389.78 46.25 387.02 45.11 384.54 43.44 382.46 41.36 380.37 39.27 378.7 36.79 377.56 34.05 376.46 31.38 375.85 28.47 375.85 25.43 375.85 22.39 376.46 19.48 377.56 16.82 378.7 14.05 380.37 11.57 382.45 9.5 384.53 7.42 387.02 5.74 389.77 4.6 392.43 3.5 395.34 2.89 398.38 2.89L420.91 2.89 420.91 25.42ZM404.61 31.63C405.42 30.82 406.08 29.85 406.52 28.78 406.94 27.76 407.18 26.62 407.18 25.42L407.18 16.64 398.4 16.64C397.2 16.64 396.07 16.88 395.04 17.3 393.97 17.74 393 18.4 392.19 19.21 391.38 20.02 390.72 20.99 390.28 22.06 389.86 23.08 389.62 24.22 389.62 25.42 389.62 26.62 389.86 27.76 390.28 28.78 390.72 29.85 391.38 30.82 392.19 31.63 393 32.44 393.97 33.1 395.04 33.54 396.06 33.96 397.2 34.2 398.4 34.2 399.6 34.2 400.74 33.97 401.76 33.54 402.83 33.1 403.8 32.44 404.61 31.63Z" fill="#ED6E1C" fill-rule="evenodd"/></g></svg>
+      <span class="tb-role" id="tbRole"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="tb-user" id="tbUser"></span>
+      <button class="logout-btn" onclick="doLogout()">Выйти</button>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="nav-section">Обучение</div>
+      <div class="nav-item active" onclick="showPage('home',this)" id="nav-home">
+        <span class="nav-icon">🏠</span> Главная
+      </div>
+      <div class="nav-item" onclick="showPage('modules',this)" id="nav-modules">
+        <span class="nav-icon">📚</span> Модули
+      </div>
+      <div class="nav-item" onclick="showPage('scripts',this)" id="nav-scripts">
+        <span class="nav-icon">📞</span> Скрипты звонков
+      </div>
+      <div class="nav-item" onclick="showPage('salesscripts',this)" id="nav-salesscripts">
+        <span class="nav-icon">🎯</span> Скрипты продаж
+      </div>
+      <div class="nav-item" onclick="showPage('checklist',this)" id="nav-checklist">
+        <span class="nav-icon">✅</span> Чек-листы
+      </div>
+      <div class="nav-sep"></div>
+      <div class="nav-section">Управление</div>
+      <div class="nav-item" onclick="showPage('mentor',this)" id="nav-mentor" style="display:none">
+        <span class="nav-icon">🎓</span> Мои стажёры
+      </div>
+      <div class="nav-item" onclick="showPage('hr',this)" id="nav-hr" style="display:none">
+        <span class="nav-icon">⚙️</span> HR-панель
+      </div>
+      <div class="nav-item" onclick="showPage('users',this)" id="nav-users" style="display:none">
+        <span class="nav-icon">👥</span> Пользователи
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-area">
+
+      <!-- HOME -->
+      <div class="page show" id="page-home">
+        <div class="welcome-banner">
+          <div class="wb-gold"></div>
+          <div class="wb-title" id="welcomeTitle">Добро пожаловать!</div>
+          <div class="wb-sub" id="welcomeSub">60-дневная программа обучения · OIL GROUP Sales</div>
+          <div id="progBlock">
+            <div class="wb-prog-label">Прогресс программы</div>
+            <div class="wb-prog-bg"><div class="wb-prog-fill" id="progFill" style="width:0%"></div></div>
+            <div class="wb-prog-pct" id="progPct">0% завершено</div>
+          </div>
+        </div>
+
+        <div id="homeNext"></div>
+
+        <div class="card">
+          <div class="card-title">Ваш ментор</div>
+          <div id="mentorInfo" style="font-size:13px;color:#333">Сергей Козлов · +998 90 123 45 67</div>
+        </div>
+      </div>
+
+      <!-- MODULES -->
+      <div class="page" id="page-modules">
+        <div class="card">
+          <div class="card-title">Программа обучения · 60 дней</div>
+          <div id="moduleList"></div>
+        </div>
+
+        <div class="card" id="moduleDetail" style="display:none">
+          <div class="card-title" id="modDetailLabel"></div>
+          <div class="card-h" id="modDetailTitle"></div>
+          <div class="card-sub" id="modDetailBody"></div>
+          <div id="modDetailTags" style="margin-top:8px"></div>
+          <div id="modDetailChecks" style="margin-top:12px"></div>
+          <div id="modPdfViewer" style="display:none"></div>
+          <div id="modYoutube" style="display:none"></div>
+          <div id="modQuizBlock" style="display:none;margin-top:16px"></div>
+          <div style="margin-top:4px">
+            <button class="send-btn" id="modSendBtn" onclick="sendProgress()">
+              &#10003; Отметить как завершённый
+            </button>
+            <span class="send-status" id="sendStatus"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCRIPTS -->
+      <div class="page" id="page-scripts">
+        <div class="card">
+          <div class="card-title">Скрипт холодного звонка · OIL GROUP</div>
+          <div class="script-phases" id="scriptPhases"></div>
+          <div id="scriptContent"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Работа с возражениями</div>
+          <div class="obj-tabs" id="objTabs"></div>
+          <div id="objContent"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Чек-лист перед звонком</div>
+          <ul class="cl-list">
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Изучить сферу клиента (транспорт / производство / СТО)</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Проверить наличие нужных позиций на складе</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Подготовить имя ЛПР если есть информация</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Выбрать вариант презентации (А — есть боль / Б — всё устраивает)</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Держать прайс открытым для отправки в WhatsApp / email</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SALES SCRIPTS PAGE -->
+      <div class="page" id="page-salesscripts">
+        <div class="script-phases">
+          <button class="sp-btn act" onclick="showSalesTab('coldcall',this)">📞 Скрипт холодного звонка</button>
+          <button class="sp-btn" onclick="showSalesTab('gatekeeper',this)">🚪 Обход привратников</button>
+        </div>
+
+        <!-- COLD CALL -->
+        <div id="sst-coldcall">
+          <div class="card">
+            <div class="card-title">Скрипт холодного звонка · OIL GROUP · 6 этапов</div>
+            <div class="warn">Скрипт построен по принципу «минимум давления — максимум результата». Менеджер ведёт клиента к встрече, а не к продаже по телефону.</div>
+            <div class="section-label">Этап 1 — Открытие + Зацепка · 10–15 сек</div>
+            <div class="line-tip">Цель: не получить «не интересует» в первые 5 секунд.</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Добрый день, [имя]. Меня зовут [имя], компания OIL GROUP, Ташкент. Звоню коротко — есть конкретное предложение по маслам, которое сейчас берут несколько компаний в вашем сегменте. Буквально три минуты — вам удобно сейчас говорить?</div>
+            <div class="line-tip">⚡ Вопрос «удобно говорить?» переключает клиента из режима защиты в режим ответа. НИКОГДА не начинайте с «я хотел бы предложить».</div>
+            <div class="section-label">Этап 2 — Позиционирование · 20–30 сек</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Мы официальные партнёры Azmol и Donaldson, работаем на рынке Узбекистана 10+ лет. Я в компании семь лет — веду клиентов от транспортных компаний до промышленных производств. Я звоню с чётким пониманием, что именно актуально для вашего типа бизнеса.</div>
+            <div class="line-tip">⚡ «Семь лет», «официальный партнёр», «Azmol и Donaldson» — это якоря. Клиент слышит не рекламу, а биографию.</div>
+            <div class="section-label">Этап 3 — Квалификация · 1–2 мин</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Скажите — вы сейчас работаете с каким-то поставщиком масел, или закупаете по ситуации?</div>
+            <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Да, есть поставщик.</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Если честно — всё вас устраивает? Сроки, наличие на складе, стабильность по ценам?</div>
+            <div class="line-tip">⚡ «Если честно» — приглашение к откровенности. Не задавайте все вопросы сразу — вплетайте в диалог.</div>
+            <div class="section-label">Этап 4 — Мини-презентация · 30–40 сек</div>
+            <div class="line-tip">Вариант А — если клиент назвал проблему:</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Именно с этим к нам чаще всего и обращаются. У нас постоянный склад в Ташкенте — масла Azmol, фильтры Donaldson в наличии. Отгрузка день-в-день. За вами будет закреплён один контакт — вы всегда знаете кому написать.</div>
+            <div class="line-tip">Вариант Б — если «всё устраивает»:</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Я и не предлагаю ничего менять. Но у любого надёжного поставщика бывают позиции, которых нет в моменте, или цена резко скакнула. Некоторые наши клиенты используют нас как «ещё один канал» — на такие случаи.</div>
+            <div class="line-tip">⚡ «Ещё один канал» снимает психологическое давление выбора.</div>
+            <div class="section-label">Этап 5 — Конкретное предложение · 20 сек</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Предлагаю сделать так: я пришлю вам прайс по позициям, которые наиболее ходовые в вашем сегменте — один файл, без воды. Как удобнее — в Telegram или на email?</div>
+            <div class="line-tip">⚡ «Telegram или email?» — выбор между двумя «да».</div>
+            <div class="section-label">Этап 6 — Закрытие на встречу · 30–40 сек</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Отлично, [имя], записал. Отправлю в течение часа. И давайте сразу договоримся — я подъеду к вам в [конкретный день], буквально на 10–15 минут. В первой половине дня удобнее или во второй?</div>
+            <div class="line-tip">Если клиент замялся:</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>[Имя], мне важно понять ваш объём, чтобы подготовить конкретные цифры под вас. По телефону это не сделать. 20 минут — и у вас на руках готовое коммерческое с реальными условиями. Завтра в первой половине или во второй?</div>
+            <div class="line-tip">⚡ Не «можно встретиться?» — а утверждение с выбором времени.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Работа с возражениями · 8 сценариев</div>
+            <div class="warn">Золотое правило: не спорить, не оправдываться — уточнять и переформулировать.</div>
+            <div class="obj-tabs" id="coldCallObjTabs"></div>
+            <div id="coldCallObjContent"></div>
+          </div>
+        </div>
+
+        <!-- GATEKEEPERS -->
+        <div id="sst-gatekeeper" style="display:none">
+          <div class="card">
+            <div class="card-title">Обход привратников · Получение прямого номера ЛПР</div>
+            <div class="warn">Главный принцип: вы звоните НЕ чтобы продать — вы звоните потому что УЖЕ идёт процесс, и он застрял. Срочность и конкретика — ваше главное оружие.</div>
+            <div class="section-label">Часть 1 — Разведка до звонка: где найти имя ЛПР</div>
+            <div class="line-tip">Менеджер, который звонит с именем ЛПР, конвертирует в 3 раза лучше. Потратьте 5–10 минут до звонка.</div>
+            <div style="overflow-x:auto;margin:10px 0">
+              <table style="width:100%;border-collapse:collapse;font-size:12px">
+                <tr style="background:var(--navy);color:#fff"><td style="padding:8px 10px;font-weight:600">Источник</td><td style="padding:8px 10px;font-weight:600">Что ищем</td><td style="padding:8px 10px;font-weight:600">Что находим</td></tr>
+                <tr style="background:#f8f6f0"><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Сайт компании</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">«О нас», «Команда», «Контакты»</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Имя директора, нач. снабжения</td></tr>
+                <tr><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">2GIS / Яндекс Карты</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Карточка компании → «Контакты»</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Телефоны отделов, имя директора</td></tr>
+                <tr style="background:#f8f6f0"><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">hh.uz</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Вакансии снабженца, закупщика</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">ФИО HR, имя руководителя</td></tr>
+                <tr><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">my.gov.uz / soliq.uz</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Поиск по ИНН или названию</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Официальное ФИО директора</td></tr>
+                <tr style="background:#f8f6f0"><td style="padding:7px 10px">OLX.uz / Torg.uz</td><td style="padding:7px 10px">Объявления о закупке ГСМ</td><td style="padding:7px 10px">Контактное лицо — часто сам закупщик</td></tr>
+              </table>
+            </div>
+            <div class="section-label">Часть 2 — Цепочка замены если ЛПР недоступен</div>
+            <div style="overflow-x:auto;margin:10px 0">
+              <table style="width:100%;border-collapse:collapse;font-size:12px">
+                <tr style="background:var(--navy);color:#fff"><td style="padding:8px 10px;font-weight:600">#</td><td style="padding:8px 10px;font-weight:600">К кому обращаться</td><td style="padding:8px 10px;font-weight:600">Что говорить</td></tr>
+                <tr style="background:#f8f6f0"><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">1</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Директор / владелец</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">«[Имя] на месте?» — уверенный тон, без объяснений.</td></tr>
+                <tr><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">2</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Зам. директора / коммерческий</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">«Нужно согласовать вопрос поставки — с кем это лучше решить?»</td></tr>
+                <tr style="background:#f8f6f0"><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">3</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Начальник снабжения</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">«Звоню по заявке — нужно уточнить детали с ответственным за ГСМ.»</td></tr>
+                <tr><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">4</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Главный механик</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">«Есть технический вопрос по допускам масел для вашего оборудования.»</td></tr>
+                <tr style="background:#f8f6f0"><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">5</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">Бухгалтер / финансист</td><td style="padding:7px 10px;border-bottom:1px solid #e8e8e4">«По платёжному документу — нужна сверка по нашей заявке.»</td></tr>
+                <tr><td style="padding:7px 10px">6</td><td style="padding:7px 10px">Любой рядовой сотрудник</td><td style="padding:7px 10px">«Как зовут вашего снабженца / механика? Нужно с ним связаться.»</td></tr>
+              </table>
+            </div>
+            <div class="line-tip">⚡ Рядовой сотрудник — самый недооценённый канал. 30 секунд — и у вас есть имя закупщика.</div>
+            <div class="section-label">Часть 3 — Техника «Звонок на вакансию»: двухходовая разведка</div>
+            <div class="line-tip">Шаг 1 — разведочный звонок в HR, получаем имя. Шаг 2 — звоним на ресепшн с именем. Между звонками — 15–30 минут.</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР → HR</div>Добрый день. Меня зовут [имя]. Я увидел вашу вакансию снабженца на hh.uz. Меня интересует: кому непосредственно будет подчиняться этот специалист?</div>
+            <div class="line-k"><div class="who who-k">HR</div>Непосредственный руководитель — [имя и должность ЛПР].</div>
+            <div class="line-tip">⚡ Задайте 2–3 реальных вопроса по вакансии — один вопрос «кому подчиняться» среди нескольких деловых не вызывает подозрений.</div>
+            <div class="section-label">Шаг 2 — Боевой звонок с именем ЛПР</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Добрый день. Соедините меня, пожалуйста, с [имя ЛПР].</div>
+            <div class="line-k"><div class="who who-k">СЕКРЕТАРЬ</div>По какому вопросу?</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>По поставкам. OIL GROUP.</div>
+            <div class="line-tip">⚡ Три слова. Никаких объяснений. Знание имени = статус своего человека.</div>
+            <div class="section-label">Первые 10 секунд после соединения с ЛПР</div>
+            <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Добрый день, [имя ЛПР]. Меня зовут [имя], компания OIL GROUP — официальный дистрибьютор Azmol и Donaldson в Узбекистане. Звоню коротко: есть конкретное предложение по поставке масел и фильтров для предприятий вашего профиля. Буквально три минуты — удобно говорить?</div>
+            <div class="line-tip">⚡ Вы больше НЕ делаете холодный звонок — вы звоните к человеку которого знаете по имени. Это принципиально меняет восприятие.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHECKLIST -->
+      <div class="page" id="page-checklist">
+
+        <div class="card">
+          <div class="card-title">Блок 1 · Дни 1–3 — Знакомство с компанией</div>
+          <ul class="cl-list">
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Подписать welcome-лист</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Составить конспект ключевых фактов о компании</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Пробное заполнение бланка встречи</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Создать тестовую карточку клиента в Bitrix24</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Выполнить 3 учебных переноса данных из бланка в Bitrix24</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Блок 2 · Дни 4–10 — Моторные и трансмиссионные масла</div>
+          <ul class="cl-list">
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Составить конспект по моторным маслам</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Заполнить сравнительную таблицу масел</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Написать письменные выводы по YouTube-урокам</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Составить конспект по трансмиссионным маслам</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Пройти ролевую игру с наставником</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Блок 2 · Дни 11–20 — Индустриальные масла, смазки, спецпродукты</div>
+          <ul class="cl-list">
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Составить конспект + схему применения индустриальных масел</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Записать 3 ключевых тезиса из YouTube по промышленному применению</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Составить сравнительную карту по смазкам</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Подготовить конспект + USP-карточки по спецпродуктам Azmol</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Блок 3+4 · Дни 21–35 — Bitrix24, 1С и навыки продаж</div>
+          <ul class="cl-list">
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Создать самостоятельную сделку в Bitrix24</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Заполнить 3 кейса с импортом из бланка встречи</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Выставить 1 учебный счёт в 1С</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Пройти полный учебный цикл в 1С</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Заполнить 3 бланка встречи (SPIN-вопросы)</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Составить скрипт возражений</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Провести 5 учебных звонков</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Блок 5 · Дни 36–50 — Договоры и первые выезды</div>
+          <ul class="cl-list">
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Оформить шаблон договора</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Заполнить 3 договора без ошибок</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Сдать тест по договорной работе (порог 85%)</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Совершить первый выезд к клиенту с наставником</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Заполнить бланк встречи и перенести в Bitrix24</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Написать отчёт по встрече</span></li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Блок 6 · Дни 51–60 — Финальный период и аттестация</div>
+          <ul class="cl-list">
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Выполнять KPI: 3–5 звонков в день</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Вести все сделки в Bitrix24</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Подготовить конспекты и карточки для повторения</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Сдать финальный тест (порог 80%)</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Провести презентацию на встрече с руководством</span></li>
+            <li class="cl-item"><div class="cl-cb" onclick="toggleCl(this)"></div><span>Подписать оценочный лист</span></li>
+          </ul>
+        </div>
+
+      </div>
+            <!-- MENTOR PAGE -->
+      <div class="page" id="page-mentor">
+        <div class="notify">Ментор-режим: вы видите прогресс ваших стажёров в реальном времени</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-n">3</div><div class="stat-l">Ваших стажёра</div></div>
+          <div class="stat-card"><div class="stat-n">58%</div><div class="stat-l">Средний прогресс</div><div class="stat-trend trend-up">+12% за неделю</div></div>
+          <div class="stat-card"><div class="stat-n">1</div><div class="stat-l">Требует внимания</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Ваши стажёры</div>
+          <div class="tr-row">
+            <div class="status-pip s-active"></div>
+            <div class="avatar">АИ</div>
+            <div class="tr-info"><div class="tr-name">Алексей Иванов</div><div class="tr-meta">День 12 · Менеджер по продажам</div></div>
+            <div class="prog-mini"><div class="pb"><div class="pf pf-green" style="width:83%"></div></div><div class="pct">83%</div></div>
+          </div>
+          <div class="tr-row">
+            <div class="status-pip s-active"></div>
+            <div class="avatar">ДР</div>
+            <div class="tr-info"><div class="tr-name">Дилноза Рашидова</div><div class="tr-meta">День 9 · Менеджер по продажам</div></div>
+            <div class="prog-mini"><div class="pb"><div class="pf pf-gold" style="width:50%"></div></div><div class="pct">50%</div></div>
+          </div>
+          <div class="tr-row">
+            <div class="status-pip s-idle"></div>
+            <div class="avatar">БТ</div>
+            <div class="tr-info"><div class="tr-name">Бахром Турсунов</div><div class="tr-meta">День 7 · Отстаёт от плана</div></div>
+            <div class="prog-mini"><div class="pb"><div class="pf pf-gold" style="width:25%"></div></div><div class="pct">25%</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HR PAGE -->
+      <div class="page" id="page-hr">
+        <div class="warn">HR-режим: полный доступ ко всем данным и аналитике</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-n">5</div><div class="stat-l">Стажёров активно</div><div class="stat-trend trend-up">+2 на этой неделе</div></div>
+          <div class="stat-card"><div class="stat-n">63%</div><div class="stat-l">Средний прогресс</div><div class="stat-trend trend-up">+8% за неделю</div></div>
+          <div class="stat-card"><div class="stat-n">2</div><div class="stat-l">Завершили программу</div></div>
+          <div class="stat-card"><div class="stat-n">1</div><div class="stat-l">Отстают от плана</div><div class="stat-trend trend-down">требует внимания</div></div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title">Все стажёры</div>
+            <div class="filter-row">
+              <button class="fb act" onclick="setFilter('all',this)">Все</button>
+              <button class="fb" onclick="setFilter('active',this)">Активные</button>
+              <button class="fb" onclick="setFilter('risk',this)">Отстают</button>
+            </div>
+            <div id="hrTraineeList"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Последние события</div>
+            <div id="hrLog"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Прохождение модулей</div>
+          <div id="hrModStats"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Данные из Google Sheets</div>
+          <div style="font-size:13px;color:#555;margin-bottom:10px">Все отметки о завершении модулей автоматически записываются в вашу таблицу.</div>
+          ${currentUser && currentUser.role === 'hr' ? `<a href="https://docs.google.com/spreadsheets/d/1MowYmehuES9wQT-QRMSM_V7tjjISC4GU4QX5QwuwHY0/edit" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#0C2340;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600">📊 Открыть Google Таблицу</a>` : `<span style="font-size:12px;color:#aaa">Доступно только для HR</span>`}
+        </div>
+      </div>
+
+      <!-- USERS PAGE -->
+      <div class="page" id="page-users">
+        <div class="card">
+          <div class="card-title">Управление пользователями</div>
+          <div style="font-size:13px;color:#555;margin-bottom:16px">Список логинов и паролей. Чтобы добавить стажёра — добавьте его в массив USERS в коде портала.</div>
+          <div style="background:#f8f6f0;border-radius:8px;padding:14px;font-size:12px;font-family:monospace;color:#333;line-height:1.8">
+            <b>Стажёры:</b><br>
+            alexey.ivanov / pass: star2024<br>
+            dilnoza.rashidova / pass: star2024<br>
+            kamol.umarov / pass: star2024<br>
+            nilufar.saidova / pass: star2024<br>
+            bakhrom.tursunov / pass: star2024<br><br>
+            <b>Менторы:</b><br>
+            sergey.kozlov / pass: mentor2024<br>
+            aigul.mamytova / pass: mentor2024<br><br>
+            <b>HR:</b><br>
+            svetlana.hr / pass: oilgrouphr2024<br><br>
+            <b>Директор:</b><br>
+            director / pass: director2024<br>
+            sergey.arkadievich / pass: oildir2024<br>
+            elyas.sergeevich / pass: oildir2025
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /main-layout -->
+</div><!-- /app -->
+
+<script>
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxj8sPgaL3TD206TJSse4PzFqTnK114a7sc8yFPmXS8bkoyOw3QlDvU5rD6XYv5tcjv/exec';
+
+// ===== USERS DATABASE =====
+const USERS = {
+  'alexey.ivanov':     {pass:'star2024',    name:'Алексей Иванов',    role:'trainee', day:12, mentor:'Сергей Козлов · +998 90 111 11 11', progress:2},
+  'dilnoza.rashidova': {pass:'star2024',    name:'Дилноза Рашидова',  role:'trainee', day:9,  mentor:'Сергей Козлов · +998 90 111 11 11', progress:1},
+  'kamol.umarov':      {pass:'star2024',    name:'Камол Умаров',      role:'trainee', day:7,  mentor:'Айгуль Мамытова · +998 90 222 22 22', progress:1},
+  'nilufar.saidova':   {pass:'star2024',    name:'Нилуфар Саидова',   role:'trainee', day:5,  mentor:'Айгуль Мамытова · +998 90 222 22 22', progress:0},
+  'bakhrom.tursunov':  {pass:'star2024',    name:'Бахром Турсунов',   role:'trainee', day:3,  mentor:'Сергей Козлов · +998 90 111 11 11', progress:0},
+  'sergey.kozlov':     {pass:'mentor2024',  name:'Сергей Козлов',     role:'mentor'},
+  'aigul.mamytova':    {pass:'mentor2024',  name:'Айгуль Мамытова',   role:'mentor'},
+  'svetlana.hr':       {pass:'oilgrouphr2024', name:'Светлана (HR)',   role:'hr'},
+  'director':          {pass:'director2024',   name:'Директор',        role:'director'},
+  'sergey.arkadievich':{pass:'oildir2024',      name:'Сергей Аркадьевич', role:'director'},
+  'elyas.sergeevich':  {pass:'oildir2025',      name:'Эльяс Сергеевич',   role:'director'},
+};
+
+// ===== MODULES =====
+const MODULES = [
+  {id:'m1', title:'Блок 1 — Знакомство с компанией', day:'Дни 1–3', time:'3 дня', tags:['Обязательный','День 1'],
+   body:'Встреча с HR, оформление, знакомство с командой и экскурсия. Презентация «О компании»: история, структура, клиенты, бренды. Инструктаж по бланку встречи. Знакомство с Bitrix24. Позиционирование брендов Azmol и Donaldson. Порог теста: 80%.',
+   checks:[
+     'Подписать welcome-лист',
+     'Составить конспект ключевых фактов о компании',
+     'Пробное заполнение бланка встречи',
+     'Создать тестовую карточку клиента в Bitrix24',
+     'Выполнить 3 учебных переноса данных из бланка в Bitrix24',
+   ],
+   pdfs:[
+     {title:'О компании OIL GROUP',      url:'https://drive.google.com/file/d/10LRrFLj-P-9mFY0Ld00y870q5mv2HC8U/preview'},
+     {title:'Карта потребности клиента', url:'https://drive.google.com/file/d/1jUDX83CK2KEToCATts_vYRcljokwra9D/preview'},
+   ]},
+
+  {id:'m2', title:'Блок 2 — Моторные и трансмиссионные масла', day:'Дни 4–10', time:'7 дней', tags:['Продукт','Обязательный'],
+   body:'Презентация «Моторное масло» (36 стр.): классификация, вязкость, стандарты, применение, отличия, преимущества. YouTube-ролики по моторным маслам. Презентация «Трансмиссионные масла» (19 стр.): типы КПП, масла для авто и техники. Ролевая игра: как объяснить отличие масел клиенту. Порог теста: 75%.',
+   checks:[
+     'Составить конспект по моторным маслам',
+     'Заполнить сравнительную таблицу масел',
+     'Написать письменные выводы по YouTube-урокам',
+     'Составить конспект по трансмиссионным маслам',
+     'Пройти ролевую игру с наставником',
+   ],
+   pdfs:[
+     {title:'Моторные масла',          url:'https://drive.google.com/file/d/132yI7TBPARbmNnO1gZPx2j7sLYsyZUGW/preview'},
+     {title:'Трансмиссионные масла',   url:'https://drive.google.com/file/d/1qrWcPOG2m90-dDihzj--ciWF-mLsQT6r/preview'},
+   ],
+   youtube:'https://youtube.com/playlist?list=PLLyN4h9XLdGXenZ0VAHU8-p5mqRrgl6NZ&si=iG4NOyLuaxEnMwXE'},
+
+  {id:'m3', title:'Блок 2 — Индустриальные масла, смазки, спецпродукты', day:'Дни 11–20', time:'10 дней', tags:['Продукт','Обязательный'],
+   body:'Презентация «Индустриальные масла» (46 стр.): гидравлика, компрессоры, турбины. YouTube по промышленному применению. Презентация «Пластичные смазки» (17 стр.): NLGI, применение, Gadus. Спецпродукты Azmol: презентация А (20 стр.) + презентация Б (53 стр.). Групповая встреча с командой. Порог теста: 75%.',
+   checks:[
+     'Составить конспект + схему применения индустриальных масел',
+     'Записать 3 ключевых тезиса из YouTube',
+     'Составить сравнительную карту по смазкам',
+     'Подготовить конспект + USP-карточки по спецпродуктам Azmol',
+   ],
+   pdfs:[
+     {title:'Индустриальные масла и смазки', url:'https://drive.google.com/file/d/1KQfgxbuDc37aaJ1Vx_Jkyn7kvXOYp2r_/preview'},
+     {title:'Спецпродукты',                  url:'https://drive.google.com/file/d/1cD9CPSdhHtgjOrh5eU0Zokkj-e6LUcCE/preview'},
+     {title:'Azmol — продуктовая линейка',   url:'https://drive.google.com/file/d/1pIiGD3bBDOYs0GhM2jPwat63KQNfXk97/preview'},
+   ],
+   youtube:'https://youtube.com/playlist?list=PLLyN4h9XLdGXenZ0VAHU8-p5mqRrgl6NZ&si=iG4NOyLuaxEnMwXE'},
+
+  {id:'m4', title:'Блок 3+4 — Bitrix24, 1С и навыки продаж', day:'Дни 21–35', time:'15 дней', tags:['Инструменты','Продажи'],
+   body:'Bitrix24: воронка продаж, задачи, сделки, импорт из бланка встречи, шаблоны, отчёты. 1С: интерфейс, выставление счёта, накладные, остатки, контроль оплаты. Техника продаж: SPIN-вопросы, выявление потребности, бланк встречи. Работа с возражениями. Холодные звонки: скрипт, интонация, назначение встречи. Групповая встреча — разбор кейсов. Порог теста: 80%.',
+   checks:[
+     'Создать самостоятельную сделку в Bitrix24',
+     'Заполнить 3 кейса с импортом из бланка',
+     'Выставить 1 учебный счёт в 1С',
+     'Пройти полный учебный цикл в 1С',
+     'Заполнить 3 бланка встречи (SPIN)',
+     'Составить скрипт возражений',
+     'Провести 5 учебных звонков',
+   ]},
+
+  {id:'m5', title:'Блок 5 — Договоры и первые выезды', day:'Дни 36–50', time:'15 дней', tags:['Практика','Договоры'],
+   body:'Изучение договорной базы: виды договоров с клиентами, обязательные реквизиты. Заполнение договоров: типовые ошибки, согласование. Первый самостоятельный выезд к клиенту с наставником — бланк встречи → Bitrix24. Дебриф с наставником. Самостоятельная работа: 3–5 холодных звонков в день. Порог теста: 85%.',
+   checks:[
+     'Оформить шаблон договора',
+     'Заполнить 3 договора без ошибок',
+     'Сдать тест по договорной работе (порог 85%)',
+     'Совершить первый выезд к клиенту с наставником',
+     'Заполнить бланк встречи и перенести в Bitrix24',
+     'Написать отчёт по встрече',
+   ]},
+
+  {id:'m6', title:'Блок 6 — Финальный период и аттестация', day:'Дни 51–60', time:'10 дней', tags:['Аттестация','Итог'],
+   body:'Полностью самостоятельная работа: звонки, встречи, Bitrix24, договоры. KPI: звонки, встречи, сделки. Финальная встреча с командой — разбор кейсов. Подготовка к аттестации: повторение всех тем. Финальный тест по всем блокам. Встреча с коммерческим директором: презентация компании и продуктов, обратная связь, план на квартал. Порог финального теста: 80%.',
+   checks:[
+     'Выполнять KPI: 3–5 звонков в день',
+     'Вести все сделки в Bitrix24',
+     'Подготовить конспекты и карточки для повторения',
+     'Сдать финальный тест (порог 80%)',
+     'Провести презентацию на встрече с руководством',
+     'Подписать оценочный лист',
+   ]},
+];
+
+// ===== SCRIPT PHASES =====
+const PHASES = [
+  {label:'1. Открытие', content:`
+    <div class="section-label">Цель: не получить «не интересует» в первые 5 секунд · 10–15 сек</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Добрый день, [имя]. Меня зовут [имя], компания OIL GROUP, Ташкент. Звоню коротко — есть конкретное предложение по маслам, которое сейчас берут несколько компаний в вашем сегменте. Буквально три минуты — вам удобно сейчас говорить?</div>
+    <div class="line-tip">Вопрос «удобно говорить?» переключает клиента из режима защиты в режим ответа. Никогда не начинайте с «я хотел бы предложить» — это прямой триггер отказа.</div>`},
+  {label:'2. Позиционирование', content:`
+    <div class="section-label">Цель: доверие через факты · 20–30 сек</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Мы официальные партнёры Shell и Azmol, работаем на рынке Узбекистана 10+ лет. Я в этой теме семь лет — веду клиентов от транспортных компаний до промышленных производств. Поэтому когда я звоню — у меня уже есть понимание, что именно актуально для вашего типа бизнеса.</div>
+    <div class="line-tip">«Семь лет», «официальный партнёр», «Shell и Azmol» — это якоря. Клиент слышит не рекламу, а биографию.</div>`},
+  {label:'3. Квалификация', content:`
+    <div class="section-label">Цель: разговорить, чтобы клиент сам назвал боль · 1–2 мин</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Скажите — вы сейчас работаете с каким-то поставщиком масел, или закупаете по ситуации?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Да, есть поставщик.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понятно. А если честно — всё устраивает? Сроки, наличие на складе, стабильность по ценам?</div>
+    <div class="line-tip">«Если честно» — приглашение к откровенности, не допрос. Оба ответа рабочие.</div>`},
+  {label:'4. Презентация', content:`
+    <div class="section-label">Вариант А — если есть боль</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Именно с этим к нам чаще всего и обращаются. У нас постоянный склад в Ташкенте — Shell Helix, Azmol, фильтры Donaldson в наличии. Отгрузка день-в-день. За вами закрепляется один контакт — вы всегда знаете кому написать и когда придёт товар.</div>
+    <div class="divider"></div>
+    <div class="section-label">Вариант Б — если «всё устраивает»</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Хорошо, это важно. Я и не предлагаю ничего менять. Многие наши клиенты используют нас как «второй канал» — на случай когда у основного поставщика нет нужной позиции или цена резко скакнула. Это не обязательство, просто удобный инструмент под рукой.</div>
+    <div class="line-tip">«Второй канал» снимает давление выбора. Клиент ничего не «предаёт».</div>`},
+  {label:'5. Предложение', content:`
+    <div class="section-label">Цель: убрать «подумаю» · 20 сек</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Предлагаю сделать так: я пришлю вам прайс по самым ходовым позициям в вашем сегменте — один файл, без воды. Посмотрите, сравните спокойно. Как удобнее — в WhatsApp или на email?</div>
+    <div class="line-tip">«WhatsApp или email?» — выбор между двумя «да». Не «хотите / не хотите».</div>`},
+  {label:'6. Закрытие', content:`
+    <div class="section-label">Цель: зафиксировать дату встречи · 30–40 сек</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Отлично, [имя], записал. Отправлю в течение часа. И давайте сразу договоримся — я наберу вас в [конкретный день], буквально на 10–15 минут, чтобы пройтись по позициям вместе. В первой половине дня удобнее или во второй?</div>
+    <div class="divider"></div>
+    <div class="section-label">Если клиент замялся перед встречей</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>[Имя], я не предлагаю встречу ради встречи. Мне важно понять ваш объём, чтобы подготовить конкретные цифры со скидкой под ваш объём. По телефону это не сделать. 20 минут — и у вас на руках готовое коммерческое с реальными условиями. Когда удобнее — начало следующей недели?</div>`},
+];
+
+// ===== OBJECTIONS =====
+const OBJECTIONS = [
+  {label:'«Нам не интересно»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Нам не интересно / нам не нужно.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понимаю. Можно один вопрос? Вы говорите «не интересно» — это потому что тема масел вообще не актуальна, или уже есть надёжный канал поставки?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Ну, поставщик есть.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Именно. Тогда я и не говорю про замену — я говорю про подстраховку. У нас треть клиентов пришли с той же фразой. Сейчас они берут у нас только когда у основного поставщика что-то не так. Давайте встретимся на 15 минут — покажу позиции и цены. Когда удобнее — в среду или в четверг?</div>
+    <div class="line-tip">«Не интересно» в 90% случаев — это защитная реакция, не отказ. Разбиваем на конкретную причину.</div>`},
+  {label:'«Есть поставщик»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>У нас уже есть поставщик, работаем с ними давно.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Отлично — долгосрочные отношения это ценно. Именно поэтому не предлагаю ничего менять. Единственный вопрос: бывало ли так, что нужная позиция заканчивалась или срок поставки неожиданно растягивался?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Ну, бывает иногда.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Вот именно под этот «иногда» мы и работаем. Склад в Ташкенте, отгрузка день-в-день. Не конкурент — просто страховка. Встретимся на 15 минут? В четверг утром удобно?</div>
+    <div class="line-tip">Никогда не атакуйте текущего поставщика. «Страховка» не создаёт конфликт лояльности.</div>`},
+  {label:'«Пришлите на почту»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Пришлите информацию на почту, посмотрим.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Конечно, пришлю. И всё же — письма теряются, я сам знаю. Давайте сделаю иначе: пришлю, и через два дня наберу вас на пять минут — убедиться что дошло и ответить на вопросы. Записываю email.</div>
+    <div class="line-tip">«Пришлите на почту» — вежливое «до свидания». Нейтрализуется через обязательство перезвонить. Второй звонок уже не холодный.</div>`},
+  {label:'«Нет времени»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Сейчас занят / нет времени говорить.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понимаю, не буду задерживать. Скажите — когда удобнее: сегодня после трёх или завтра с утра?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Завтра.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Отлично. Набираю вас завтра в [время]. Договорились, [имя].</div>
+    <div class="line-tip">Не спрашивайте «когда можно перезвонить?» — скажет «через месяц». Давайте альтернативу: сегодня или завтра.</div>`},
+  {label:'«Дорого»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Скорее всего дорого. Сколько стоит?</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Цена зависит от объёма и ассортимента — у нас нет единого прайса «для всех», считаем под каждого клиента. За 15 минут встречи я пойму ваш объём и дам конкретную цифру. По опыту — мы конкурентоспособны, особенно на регулярных отгрузках. В начале или конце недели удобнее?</div>
+    <div class="line-tip">Цена по телефону — ловушка. Встреча = время подготовить предложение «под объём» с реальной скидкой.</div>`},
+  {label:'«Перезвоните позже»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Перезвоните через месяц / позже.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Хорошо. Уточните — «через месяц» потому что сейчас идёт активный период, или потому что уже закупились и следующая потребность будет позже?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Да, закупились уже.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понятно. Тогда наберу вас за две недели до следующей закупки — чтобы у вас было время сравнить спокойно. Обычно закупка в начале месяца? Значит, наберу [дата]. И пока — отправлю прайс сегодня, чтобы он уже был перед глазами. WhatsApp удобен?</div>
+    <div class="line-tip">«Перезвоните позже» часто — «не знаю как отказать». Уточнение переводит в конкретный план с датой.</div>`},
+  {label:'«Не меняем»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Мы принципиально не меняем поставщиков.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Уважаю это. Скажите — этот принцип существует потому что текущий поставщик ни разу не подводил, или потому что менять — лишние хлопоты?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>В целом устраивает.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>[Имя], компании у которых «всё устраивает» — именно те, кому мы нужны как резервный партнёр. Когда у вашего поставщика что-то идёт не так — вы хотите тогда искать альтернативу, или иметь готовый вариант под рукой? Давайте просто познакомимся — 15 минут, без обязательств. Приеду к вам в офис.</div>
+    <div class="line-tip">Превратить «не меняем» в «запасной вариант». Клиент не «изменяет» — он «подстраховывается».</div>`},
+  {label:'«Не я решаю»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Я не принимаю решения по закупкам.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понял, спасибо что сказали. Подскажите — кто в компании занимается закупкой масел и расходников? Как его зовут?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>[Имя ЛПР]</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Спасибо. Не затруднит соединить меня с [имя ЛПР] — или подскажете прямой номер? Скажу, что звоню по вашей рекомендации.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР (при выходе на ЛПР)</div>Добрый день, [имя ЛПР]. Меня зовут [имя], OIL GROUP. Ваш коллега [имя] посоветовал обратиться к вам напрямую — по вопросу поставки масел. Буквально три минуты — удобно говорить?</div>
+    <div class="line-tip">«Звоню по рекомендации коллеги» снимает барьер холодного звонка.</div>`},
+];
+
+// HR data
+const HR_TRAINEES = [
+  {name:'Алексей Иванов',    login:'alexey.ivanov',    role:'Менеджер', pct:83, day:12, status:'active'},
+  {name:'Дилноза Рашидова',  login:'dilnoza.rashidova',role:'Менеджер', pct:67, day:9,  status:'active'},
+  {name:'Камол Умаров',      login:'kamol.umarov',     role:'Менеджер', pct:50, day:7,  status:'active'},
+  {name:'Нилуфар Саидова',   login:'nilufar.saidova',  role:'Координатор',pct:33,day:5, status:'idle'},
+  {name:'Бахром Турсунов',   login:'bakhrom.tursunov', role:'Менеджер', pct:17, day:3,  status:'idle'},
+];
+const HR_LOG = [
+  {time:'14:31',who:'Алексей И.',what:'завершил модуль «Работа с возражениями»',type:'d'},
+  {time:'13:55',who:'Камол У.',  what:'начал модуль «Скрипт холодного звонка»', type:'s'},
+  {time:'11:20',who:'Дилноза Р.',what:'вошла в систему',                         type:'l'},
+  {time:'10:44',who:'Нилуфар С.',what:'завершила модуль «Портрет клиента»',      type:'d'},
+  {time:'09:15',who:'Бахром Т.', what:'первый вход в портал',                    type:'l'},
+];
+const HR_MOD_STATS = [
+  {name:'Блок 1 — Знакомство с компанией',                    done:5,total:5},
+  {name:'Блок 2 — Моторные и трансмиссионные масла',          done:4,total:5},
+  {name:'Блок 2 — Индустриальные масла, смазки, спецпродукты',done:3,total:5},
+  {name:'Блок 3+4 — Bitrix24, 1С и навыки продаж',           done:3,total:5},
+  {name:'Блок 5 — Договоры и первые выезды',                  done:2,total:5},
+  {name:'Блок 6 — Финальный период и аттестация',             done:1,total:5},
+];
+
+// ===== STATE =====
+let currentUser = null;
+let currentModule = null;
+
+// ===== AUTH =====
+function doLogin(){
+  const login = document.getElementById('loginInput').value.trim().toLowerCase();
+  const pass  = document.getElementById('passInput').value;
+  const err   = document.getElementById('loginErr');
+  const user  = USERS[login];
+  if(!user || user.pass !== pass){
+    err.textContent = 'Неверный логин или пароль. Проверьте введённые данные.';
+    return;
+  }
+  err.textContent = '';
+  currentUser = {...user, login};
+  document.getElementById('loginWrap').style.display = 'none';
+  const app = document.getElementById('app');
+  app.style.display = 'flex';
+  document.getElementById('tbRole').textContent = {trainee:'СТАЖЁР',mentor:'МЕНТОР',hr:'HR',director:'ДИРЕКТОР'}[user.role];
+  document.getElementById('tbUser').textContent = user.name;
+  setupNav();
+  setupHome();
+  setupModules();
+  setupScripts();
+  setupHR();
+  sendLogin();
+}
+
+function doLogout(){
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('loginInput').value = '';
+  document.getElementById('passInput').value = '';
+  showPage('home', document.getElementById('nav-home'));
+}
+
+// ===== NAV =====
+function setupNav(){
+  const r = currentUser.role;
+  document.getElementById('nav-mentor').style.display = r === 'mentor' ? 'flex' : 'none';
+  document.getElementById('nav-hr').style.display     = (r === 'hr' || r === 'director') ? 'flex' : 'none';
+  document.getElementById('nav-users').style.display  = r === 'hr' ? 'flex' : 'none';
+}
+
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
+  const pg = document.getElementById('page-'+id);
+  if(pg) pg.classList.add('show');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const ni = document.getElementById('nav-'+id);
+  if(ni) ni.classList.add('active');
+}
+
+// ===== HOME =====
+function setupHome(){
+  const u = currentUser;
+  document.getElementById('welcomeTitle').textContent = 'Привет, ' + u.name.split(' ')[0] + '!';
+  if(u.role === 'trainee'){
+    const done = u.progress || 0;
+    const pct = Math.round(done / MODULES.length * 100);
+    document.getElementById('welcomeSub').textContent = `День ${u.day} из 60 · Программа обучения OIL GROUP`;
+    document.getElementById('progBlock').style.display = 'block';
+    setTimeout(()=>{
+      document.getElementById('progFill').style.width = pct + '%';
+      document.getElementById('progPct').textContent = pct + '% завершено · ' + done + ' из ' + MODULES.length + ' модулей';
+    }, 300);
+    const next = MODULES[done] || null;
+    document.getElementById('homeNext').innerHTML = next ? `
+      <div class="card" style="border-left:4px solid var(--gold)">
+        <div class="card-title">Следующий шаг</div>
+        <div class="card-h">${next.title}</div>
+        <div class="card-sub">${next.body.slice(0,120)}...</div>
+        <div style="margin-top:8px">${next.tags.map(t=>`<span class="tag tag-gold">${t}</span>`).join('')}<span class="tag tag-gray">${next.time}</span></div>
+        <button class="send-btn" style="margin-top:10px" onclick="showPage('modules',document.getElementById('nav-modules'));openModule(${done})">Начать модуль</button>
+      </div>` : `<div class="card" style="border-left:4px solid #1D9E75"><div class="card-h" style="color:#085041">Программа завершена!</div><div class="card-sub">Вы прошли все модули. Отличная работа!</div></div>`;
+    document.getElementById('mentorInfo').textContent = u.mentor;
+  } else if(u.role === 'mentor'){
+    document.getElementById('welcomeSub').textContent = 'Панель ментора · OIL GROUP';
+    document.getElementById('progBlock').style.display = 'none';
+    document.getElementById('homeNext').innerHTML = `<div class="notify">У вас 3 активных стажёра. Перейдите в раздел «Мои стажёры» для просмотра прогресса.</div>`;
+    document.getElementById('mentorInfo').textContent = 'Ваша роль: Ментор';
+  } else if(u.role === 'director'){
+    document.getElementById('welcomeSub').textContent = 'Панель директора · Просмотр аналитики';
+    document.getElementById('progBlock').style.display = 'none';
+    document.getElementById('homeNext').innerHTML = `<div class="notify">Добро пожаловать! Перейдите в раздел HR-панель для просмотра прогресса стажёров.</div>`;
+    document.getElementById('mentorInfo').textContent = 'Доступ: только просмотр';
+  } else {
+    document.getElementById('welcomeSub').textContent = 'HR-панель · Полный доступ';
+    document.getElementById('progBlock').style.display = 'none';
+    document.getElementById('homeNext').innerHTML = `<div class="warn">Активных стажёров: 5 · Средний прогресс: 63% · Требует внимания: 1</div>`;
+    document.getElementById('mentorInfo').textContent = 'Вы вошли как HR-администратор';
+  }
+}
+
+// ===== MODULES =====
+function setupModules(){
+  const list = document.getElementById('moduleList');
+  const done = currentUser.progress || 0;
+  list.innerHTML = MODULES.map((m,i)=>{
+    const isDone = i < done;
+    const isNext = i === done;
+    const locked = i > done && currentUser.role === 'trainee';
+    return `<div class="module-item ${isDone?'done':''} ${locked?'locked':''}" onclick="${locked?'':'openModule('+i+')'}">
+      <div class="mi-num">${isDone?'✓':i+1}</div>
+      <div class="mi-info">
+        <div class="mi-title">${m.title}</div>
+        <div class="mi-meta">${m.day} · ${m.time}${isNext?' · <b style="color:var(--gold)">Следующий</b>':''}</div>
+      </div>
+      <div class="mi-arrow">${locked?'🔒':'›'}</div>
+    </div>`;
+  }).join('');
+}
+
+function openModule(idx){
+  currentModule = idx;
+  const m = MODULES[idx];
+  const done = currentUser.progress || 0;
+  const already = idx < done;
+  document.getElementById('modDetailLabel').textContent = `Модуль ${idx+1} · ${m.day}`;
+  document.getElementById('modDetailTitle').textContent = m.title;
+  document.getElementById('modDetailBody').textContent = m.body;
+  document.getElementById('modDetailTags').innerHTML = m.tags.map(t=>`<span class="tag tag-gold">${t}</span>`).join('') + `<span class="tag tag-gray">${m.time}</span>`;
+  document.getElementById('modDetailChecks').innerHTML = `<div class="card-title">Что нужно сделать:</div><ul class="cl-list">${m.checks.map(c=>`<li class="cl-item"><div class="cl-cb ${already?'chk':''}" onclick="toggleCl(this)">${already?'✓':''}</div><span>${c}</span></li>`).join('')}</ul>`;
+
+  // PDF viewer (поддержка нескольких PDF)
+  const pdfWrap = document.getElementById('modPdfViewer');
+  const pdfs = m.pdfs || (m.pdf ? [m.pdf] : []);
+  if(pdfs.length){
+    const tabs = pdfs.map((p,i)=>`<button class="sp-btn${i===0?' act':''}" onclick="switchPdf(${i})" id="pdftab-${i}">${i+1}. ${p.title}</button>`).join('');
+    const iframes = pdfs.map((p,i)=>`<iframe class="pdf-iframe${i===0?'':' pdfhide'}" id="pdfframe-${i}" src="${p.url}" allowfullscreen></iframe>`).join('');
+    pdfWrap.innerHTML = `
+      <div class="pdf-viewer-wrap">
+        <div class="pdf-viewer-header">
+          <div class="pdf-viewer-title"><span>PDF</span>Материалы модуля</div>
+          <span style="font-size:11px;color:#C9A84C88;font-style:italic">🔒 только просмотр</span>
+        </div>
+        ${pdfs.length>1?`<div style="padding:10px 14px;background:#f8f6f0;border-bottom:1px solid #e8e8e4;display:flex;gap:6px;flex-wrap:wrap">${tabs}</div>`:''}
+        ${iframes}
+      </div>`;
+    pdfWrap.style.display = 'block';
+  } else {
+    pdfWrap.innerHTML = '';
+    pdfWrap.style.display = 'none';
+  }
+  // Quiz
+  const quizBlock = document.getElementById('modQuizBlock');
+  const sendBtn = document.getElementById('modSendBtn');
+  // m2 has two quizzes: m2 (motors) and m2b (transmission)
+  const quizIds = m.id === 'm2' ? ['m2','m2b'] : m.id === 'm3' ? ['m3','m3b','m3c'] : [m.id];
+  const hasQuiz = quizIds.some(id => QUIZZES[id]);
+  if(hasQuiz && currentUser.role === 'trainee' && !already){
+    quizBlock.style.display = 'block';
+    let html = '';
+    quizIds.forEach(qid => {
+      if(QUIZZES[qid]){
+        html += `<div id="quizWrap-${qid}"></div>`;
+      }
+    });
+    quizBlock.innerHTML = html;
+    quizIds.forEach(qid => { if(QUIZZES[qid]) showQuiz(qid); });
+    sendBtn.style.display = 'none';
+  } else {
+    quizBlock.innerHTML = '';
+    quizBlock.style.display = 'none';
+    sendBtn.style.display = 'inline-flex';
+  }
+
+  if(m.youtube){
+    ytWrap.innerHTML = `<a href="${m.youtube}" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:9px 18px;background:#FF0000;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;margin-top:10px">▶ Обучающие видео на YouTube</a>`;
+    ytWrap.style.display = 'block';
+  } else {
+    ytWrap.innerHTML = '';
+    ytWrap.style.display = 'none';
+  }
+
+  const btn = document.getElementById('modSendBtn');
+  if(already){
+    btn.textContent = '✓ Модуль завершён';
+    btn.disabled = true;
+    st.textContent = '';
+  } else if(idx === done){
+    btn.textContent = '✓ Отметить как завершённый';
+    btn.disabled = false;
+    st.textContent = '';
+  } else {
+    btn.textContent = 'Сначала пройдите предыдущие модули';
+    btn.disabled = true;
+    st.textContent = '';
+  }
+  document.getElementById('moduleDetail').style.display = 'block';
+  document.getElementById('moduleDetail').scrollIntoView({behavior:'smooth'});
+}
+
+// ===== SEND PROGRESS =====
+async function sendProgress(){
+  const btn = document.getElementById('modSendBtn');
+  const st  = document.getElementById('sendStatus');
+  const m   = MODULES[currentModule];
+  btn.disabled = true;
+  btn.textContent = 'Отправляем...';
+  st.textContent = '';
+  const payload = {
+    name:   currentUser.name,
+    login:  currentUser.login,
+    role:   {trainee:'Стажёр',mentor:'Ментор',hr:'HR'}[currentUser.role],
+    module: m.title,
+    status: 'Завершён',
+    day:    currentUser.day || 1,
+  };
+  try {
+    await fetch(SHEETS_URL, {method:'POST', body:JSON.stringify(payload), mode:'no-cors'});
+    currentUser.progress = (currentUser.progress||0) + 1;
+    USERS[currentUser.login].progress = currentUser.progress;
+    btn.textContent = '✓ Модуль завершён';
+    st.textContent = 'Записано в таблицу!';
+    st.style.color = '#085041';
+    setupModules();
+    setupHome();
+  } catch(e){
+    btn.disabled = false;
+    btn.textContent = '✓ Отметить как завершённый';
+    st.textContent = 'Ошибка отправки';
+    st.style.color = '#A32D2D';
+  }
+}
+
+async function sendLogin(){
+  if(!currentUser) return;
+  const payload = {
+    name:   currentUser.name,
+    login:  currentUser.login,
+    role:   {trainee:'Стажёр',mentor:'Ментор',hr:'HR'}[currentUser.role],
+    module: 'Вход в систему',
+    status: 'Вход',
+    day:    currentUser.day || 0,
+  };
+  try { await fetch(SHEETS_URL,{method:'POST',body:JSON.stringify(payload),mode:'no-cors'}); } catch(e){}
+}
+
+// ===== SCRIPTS =====
+function setupScripts(){
+  const phases = document.getElementById('scriptPhases');
+  const content = document.getElementById('scriptContent');
+  phases.innerHTML = PHASES.map((p,i)=>`<button class="sp-btn ${i===0?'act':''}" onclick="showPhase(${i},this)">${p.label}</button>`).join('');
+  content.innerHTML = `<div class="script-block show">${PHASES[0].content}</div>`;
+
+  const objTabs = document.getElementById('objTabs');
+  const objContent = document.getElementById('objContent');
+  objTabs.innerHTML = OBJECTIONS.map((o,i)=>`<button class="ot-btn ${i===0?'sel':''}" onclick="showObj(${i},this)">${o.label}</button>`).join('');
+  objContent.innerHTML = OBJECTIONS[0].content;
+}
+
+function showPhase(i, btn){
+  document.getElementById('scriptContent').innerHTML = `<div class="script-block show">${PHASES[i].content}</div>`;
+  document.querySelectorAll('.sp-btn').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+}
+
+function showObj(i, btn){
+  document.getElementById('objContent').innerHTML = OBJECTIONS[i].content;
+  document.querySelectorAll('.ot-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+// ===== HR =====
+function setupHR(){
+  renderTrainees('all');
+  document.getElementById('hrLog').innerHTML = HR_LOG.map(l=>`
+    <div class="log-row">
+      <div class="log-time">${l.time}</div>
+      <div class="log-who">${l.who}</div>
+      <div class="log-what">${l.what}</div>
+      <span class="log-tag lt-${l.type}">${l.type==='d'?'готово':l.type==='s'?'старт':'вход'}</span>
+    </div>`).join('');
+  document.getElementById('hrModStats').innerHTML = HR_MOD_STATS.map(m=>{
+    const pct = Math.round(m.done/m.total*100);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #f0ede6">
+      <div style="flex:1;font-size:12px;color:#333">${m.name}</div>
+      <div style="width:120px;height:5px;background:#eee;border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:5px;background:var(--gold);border-radius:3px"></div></div>
+      <div style="font-size:11px;color:#888;min-width:32px;text-align:right">${m.done}/${m.total}</div>
+    </div>`;}).join('');
+}
+
+function renderTrainees(filter){
+  const data = filter==='all' ? HR_TRAINEES : filter==='active' ? HR_TRAINEES.filter(t=>t.status==='active') : HR_TRAINEES.filter(t=>t.status==='idle');
+  const cols = {active:'pf-green',idle:'pf-gold',new:'pf-blue'};
+  const pips = {active:'s-active',idle:'s-idle',new:'s-new'};
+  document.getElementById('hrTraineeList').innerHTML = data.map(t=>`
+    <div class="tr-row">
+      <div class="status-pip ${pips[t.status]||'s-new'}"></div>
+      <div class="avatar">${t.name.split(' ').map(w=>w[0]).join('').slice(0,2)}</div>
+      <div class="tr-info">
+        <div class="tr-name">${t.name}</div>
+        <div class="tr-meta">${t.role} · День ${t.day}</div>
+      </div>
+      <div class="prog-mini">
+        <div class="pb"><div class="pf ${cols[t.status]||'pf-blue'}" style="width:${t.pct}%"></div></div>
+        <div class="pct">${t.pct}%</div>
+      </div>
+    </div>`).join('');
+}
+
+function setFilter(f, btn){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  renderTrainees(f);
+}
+
+// ===== QUIZ DATA =====
+const QUIZZES = {
+  'm2': {
+    title: 'Тест — Моторные масла',
+    pass: 80,
+    questions: [
+      {q:'Основные функции моторного масла. Выберите самый полный правильный ответ.',
+       opts:['Защита от изнашивания, коррозии; поддержание двигателя в чистоте; охлаждение деталей; уплотнительная функция; снижение трения.',
+             'Защита от изнашивания; поддержание двигателя в чистоте; уплотнительная функция.',
+             'Защита от изнашивания, коррозии; снижение трения, охлаждение деталей; уплотнительная функция; защита гипоидных передач; деэмульгирующие функции; поддержание двигателя в чистоте.',
+             'Все ответы верны'], ans:2},
+      {q:'Что определяет классификация SAE?',
+       opts:['Возможность применения масла в зависимости от года выпуска автомобиля.',
+             'Возможность применения масла в зависимости от климатических условий.',
+             'Возможность применения масла в зависимости от условий вождения автомобиля.',
+             'Возможность применения масла в зависимости от компании масло-производителя.'], ans:1},
+      {q:'О чём говорят спецификации API/ACEA?',
+       opts:['Возможность применения масла определённого уровня эксплуатационных свойств в зависимости от типа двигателя (бензиновый, дизельный).',
+             'Возможность использования масел для импортной американской и европейской техники до 2004 года выпуска.',
+             'Возможность применения масла на конкретном типе автомобиля и сроках замены масла.',
+             'Возможность применения масла в зависимости от температуры окружающей среды и типа автомобиля.'], ans:0},
+      {q:'В чём основное отличие понятия «наличие допуска» и «соответствие допуску»?',
+       opts:['«Наличие допуска» означает соответствующую маркировку на этикетке канистры.',
+             '«Соответствие допуску» означает, что масло полностью подходит для данного типа автомобиля, а «наличие допуска» только указание маркировки на канистре.',
+             '«Наличие допуска» означает официальное одобрение в письменном виде от производителя техники, а «соответствие допуску» лишь заявление производителя масла о возможности применения данного масла на конкретную технику.',
+             'Никакой разницы — типичная философия.'], ans:2},
+      {q:'Кто определяет сроки замены моторных масел?',
+       opts:['Производитель масла.','Пользователь, основываясь на условиях эксплуатации техники.','Сервис.','Производитель техники.'], ans:3},
+      {q:'Отметьте ряд только всесезонных моторных масел:',
+       opts:['SAE 0W-20, SAE 30, SAE 15W-20, SAE 30.',
+             'SAE 0W-30, SAE 5W-20, SAE 25W-40, SAE 10W.',
+             'SAE 0W-20, SAE 15W-50, SAE 25W-50, SAE 5W-40.',
+             'SAE 15W-40, SAE 20, SAE 20W, SAE 15W-60.'], ans:2},
+      {q:'Выберите новейший допуск API для коммерческой техники из представленных ниже:',
+       opts:['CK-4.','SN.','SL/CF.','CF-2.'], ans:0},
+      {q:'Завод-производитель требует моторное масло API CF-4, 10W-40. Вы можете заменить данный продукт на аналог:',
+       opts:['API CC, 10W-40.','API SL, 10W-40.','API CI-4, 10W-40.','API SN/CF-4, 0W-20.'], ans:2},
+      {q:'Выберите продукт с наибольшей вязкостью при температуре 100°С:',
+       opts:['SAE 5W-40','SAE 20W-50','SAE 15W-40','SAE 0W-20'], ans:1},
+      {q:'Выберите «летнее» моторное масло по вязкости:',
+       opts:['SAE 0W','SAE 5W','SAE 15W-40','SAE 60'], ans:3},
+    ]
+  },
+  'm2b': {
+    title: 'Тест — Трансмиссионные масла',
+    pass: 80,
+    questions: [
+      {q:'Основные функции трансмиссионного масла. Выберите самый полный правильный ответ.',
+       opts:['Защита от изнашивания, коррозии; снижение трения, охлаждение деталей; уплотнительная функция; деэмульгирующие функции; поддержание трансмиссии в чистоте.',
+             'Защита от изнашивания; снижение трения.',
+             'Защита от изнашивания, задиров и коррозии; охлаждение деталей; снижение трения.',
+             'Нет правильного ответа.'], ans:0},
+      {q:'По каким стандартам классифицируются трансмиссионные масла?',
+       opts:['ACEA, API','ILSAC, JASO','SAE, API','Нет правильного ответа.'], ans:2},
+      {q:'Выберите продукт (трансмиссионное масло) с наивысшими эксплуатационными характеристиками из представленных ниже:',
+       opts:['API GL-1','API GL-2','API GL-3','API GL-4'], ans:3},
+      {q:'Спецификация API GL-5 лучше по своим рабочим характеристикам, чем...',
+       opts:['GL-4, т.к. содержит большее количество противоизносных и противозадирных присадок.',
+             'Спецификации GL-5 и GL-4 разные по своим характеристикам и предназначены для применения в разных видах трансмиссии, поэтому их сравнение некорректно.',
+             'GL-4, т.к. является более современной спецификацией.',
+             'API MT-1.'], ans:1},
+      {q:'Какое масло можно заливать в ведущий мост грузовика? Выберите наиболее правильный вариант ответа.',
+       opts:['API GL-4, SAE 75W-90.',
+             'API GL-5, SAE 80W-90.',
+             'Любое, т.к. мост не является сильнонагруженным узлом.',
+             'Невозможно корректно подобрать масло, т.к. отсутствует информация о требуемых допусках и спецификациях.'], ans:3},
+    ]
+  },
+  'm3b': {
+    title: 'Тест — Пластичные смазки',
+    pass: 80,
+    questions: [
+      {q:'Какие типы присадок применяются в пластичных смазках?',
+       opts:['Ингибиторы коррозии, моющие присадки, диспергирующие присадки, противоизносные присадки.',
+             'Антиокислительные присадки, ингибиторы коррозии, противоизносные и противозадирные присадки, твердые присадки.',
+             'Модификатор вязкости, противоизносные и противозадирные присадки.',
+             'Моющие присадки, антиокислительные присадки, ингибиторы коррозии, твердые присадки.'], ans:1},
+      {q:'Каким образом базовое масло влияет на свойства смазки?',
+       opts:['Базовое масло необходимо только для удержания в составе смазки присадок. Присадки — единственный компонент, влияющий на свойства смазки.',
+             'Вязкость базового масла влияет на консистенцию смазки. Чем вязкость базового масла выше, тем смазка «тверже».',
+             'Базовое масло — основной компонент пластичной смазки, его свойства определяют смазывающую способность смазки.',
+             'Базовое масло реагирует с загустителем, чтобы смазка имела определенную консистенцию. Другого влияния на свойства смазки базовое масло не оказывает.'], ans:2},
+      {q:'Каким образом загуститель влияет на эксплуатационные свойства смазки?',
+       opts:['Загуститель влияет на консистенцию смазки, температуру каплепадения смазки, высоко- и низкотемпературные свойства, водостойкость.',
+             'Загуститель влияет только на консистенцию смазки. На эксплуатационные свойства влияют присадки и тип базового масла.',
+             'Загуститель влияет на цвет и консистенцию смазки. На эксплуатационные свойства влияет тип базового масла.',
+             'Загуститель влияет на цвет и консистенцию смазки. На эксплуатационные свойства влияют присадки.'], ans:0},
+      {q:'Какая смазка требуется при больших нагрузках?',
+       opts:['Окрашенная.',
+             'С низкой вязкостью базового масла.',
+             'С высокой вязкостью базового масла.',
+             'С классом NLGI 6.'], ans:2},
+      {q:'Производителем оборудования рекомендована смазка класса NLGI 2. Возможно ли применить смазку класса NLGI 4?',
+       opts:['Если загустители двух смазок совместимы, то возможно.',
+             'Смазка может быть слишком густой для данного применения.',
+             'Смазка может быть слишком мягкой для данного применения.',
+             'Применение смазки возможно, поскольку класс вязкости превышает рекомендации производителя оборудования не более, чем на 2 ступени.'], ans:1},
+    ]
+  },
+  'm3c': {
+    title: 'Тест — Масла Azmol',
+    pass: 80,
+    questions: [
+      {q:'Назовите линейку моторных масел Azmol для коммерческого транспорта:',
+       opts:['Famula','Avangard','Diesel Premium','Revolux'], ans:0},
+      {q:'Назовите линейку трансмиссионных масел Azmol для коммерческого транспорта:',
+       opts:['Kinetic','Gear','Transmission Universal','Forward'], ans:3},
+      {q:'Назовите линейку гидравлических масел Azmol:',
+       opts:['Avelus','Gidrotec','Гейзер','Nuto H'], ans:0},
+      {q:'Назовите линейку редукторных масел Azmol:',
+       opts:['Redutec','Gearana','Стило','Mobilgear'], ans:1},
+      {q:'Назовите линейку компрессорных масел Azmol:',
+       opts:['Compressor','Стабио','Compresta','Rarus'], ans:2},
+      {q:'Назовите линейку пластичных смазок Azmol:',
+       opts:['Plastex','Luvana','Gadus','Mobilux'], ans:1},
+      {q:'Назовите линейку моторных масел Azmol для пассажирского транспорта:',
+       opts:['Ultra Plus','Helix','Genesis','Ultratec'], ans:0},
+      {q:'Назовите линейку специальных тракторных масел Azmol:',
+       opts:['Dinatrans','Hy-Gard','Multi G','Multitrac'], ans:3},
+      {q:'Назовите линейку трансмиссионных масел Azmol для автоматической коробки передач:',
+       opts:['Spirax ATF X','ATF DEX','Kinetic ATF','ATF Multi-Vehicle'], ans:1},
+      {q:'Назовите смазочно-охлаждающую жидкость Azmol:',
+       opts:['Lactuca LT 3000','Oak Kool 310','Delta Cuttana SM','Super Form Fluid'], ans:2},
+    ]
+  },
+  'm3': {
+    title: 'Тест — Индустриальные масла',
+    pass: 80,
+    questions: [
+      {q:'Укажите классификацию компрессорных масел согласно DIN 51506:',
+       opts:['HLP.','CLP.','VDL.','Нет правильного ответа.'], ans:2},
+      {q:'Укажите классификацию гидравлических масел согласно DIN 51524:',
+       opts:['HLP.','CLP.','VDL.','Нет правильного ответа.'], ans:0},
+      {q:'Какая присадка не входит в состав компрессорных масел?',
+       opts:['Противоизносная.','Загущающая.','Антиокислительная.','Антипенная.'], ans:1},
+      {q:'Заводом производителем требуется редукторное масло DIN 51517-3, ISO VG 100. Выберите продукт, подходящий по данному описанию:',
+       opts:['CLP 100.','HVLP 100.','CL 100.','VDL 100.'], ans:0},
+      {q:'Чем отличается гидравлическое масло класса HVLP от HLP?',
+       opts:['Наличием противоизносных присадок.',
+             'Высоким содержанием серы.',
+             'Более широким температурным диапазоном применения.',
+             'Видимых отличий нет.'], ans:2},
+    ]
+  }
+};
+
+// ===== QUIZ STATE =====
+let quizState = {};
+
+function showQuiz(moduleId){
+  const quiz = QUIZZES[moduleId];
+  if(!quiz) return;
+  const attempts = quizState[moduleId]?.attempts || 0;
+  const maxAttempts = 3;
+  const remaining = maxAttempts - attempts;
+  // Support both single wrap and per-quiz wrap
+  const wrap = document.getElementById(`quizWrap-${moduleId}`) || document.getElementById('modQuizBlock');
+
+  let html = `<div class="quiz-wrap">
+    <div class="quiz-header">
+      <div class="quiz-title">📝 ${quiz.title}</div>
+      <div class="quiz-attempts">Попыток: ${attempts}/${maxAttempts}</div>
+    </div>`;
+
+  if(remaining <= 0){
+    html += `<div class="quiz-result fail">❌ Вы исчерпали все попытки. Обратитесь к ментору — модуль будет сброшен для повторного изучения.</div>`;
+  } else {
+    html += `<div id="quizQuestions">`;
+    quiz.questions.forEach((q,qi)=>{
+      html += `<div class="quiz-q">
+        <div class="quiz-q-text">${qi+1}. ${q.q}</div>`;
+      q.opts.forEach((opt,oi)=>{
+        const letter = ['А','Б','В','Г'][oi];
+        html += `<div class="quiz-opt" id="qopt-${qi}-${oi}" onclick="selectOpt(${qi},${oi})">
+          <div class="quiz-opt-letter">${letter}</div><span>${opt}</span>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div>
+    <button class="quiz-submit" id="quizSubmitBtn" onclick="submitQuiz('${moduleId}')" disabled>Отправить ответы</button>
+    <div id="quizResultBlock"></div>`;
+  }
+  html += `</div>`;
+  wrap.innerHTML = html;
+  wrap.style.display = 'block';
+  quizState[moduleId] = quizState[moduleId] || {attempts:0, selected:{}};
+}
+
+function selectOpt(qi, oi){
+  const moduleId = MODULES[currentModule].id;
+  if(!quizState[moduleId]) quizState[moduleId] = {attempts:0, selected:{}};
+  quizState[moduleId].selected[qi] = oi;
+
+  // Update UI for this question
+  const quiz = QUIZZES[moduleId];
+  quiz.questions[qi].opts.forEach((_,idx)=>{
+    const el = document.getElementById(`qopt-${qi}-${idx}`);
+    if(el) el.classList.toggle('selected', idx === oi);
+  });
+
+  // Enable submit if all answered
+  const allAnswered = quiz.questions.every((_,i)=> quizState[moduleId].selected[i] !== undefined);
+  const btn = document.getElementById('quizSubmitBtn');
+  if(btn) btn.disabled = !allAnswered;
+}
+
+async function submitQuiz(moduleId){
+  const quiz = QUIZZES[moduleId];
+  const state = quizState[moduleId];
+  state.attempts = (state.attempts || 0) + 1;
+
+  let correct = 0;
+  quiz.questions.forEach((q,qi)=>{
+    const sel = state.selected[qi];
+    const optEls = quiz.questions[qi].opts.map((_,oi)=>document.getElementById(`qopt-${qi}-${oi}`));
+    optEls.forEach(el=>{ if(el){ el.onclick=null; el.style.cursor='default'; }});
+    if(sel === q.ans){
+      correct++;
+      if(optEls[sel]) optEls[sel].classList.add('correct');
+    } else {
+      if(optEls[sel] !== undefined && optEls[sel]) optEls[sel].classList.add('wrong');
+      if(optEls[q.ans]) optEls[q.ans].classList.add('correct');
+    }
+  });
+
+  const pct = Math.round(correct / quiz.questions.length * 100);
+  const passed = pct >= quiz.pass;
+  const remaining = 3 - state.attempts;
+  const btn = document.getElementById('quizSubmitBtn');
+  if(btn) btn.style.display = 'none';
+
+  let resultHtml = '';
+  if(passed){
+    resultHtml = `<div class="quiz-result pass">✅ Тест пройден! Результат: ${correct}/${quiz.questions.length} (${pct}%). Модуль завершён — следующий открыт!</div>`;
+    // Auto-mark module as complete
+    document.getElementById('modSendBtn').click();
+  } else if(remaining > 0){
+    resultHtml = `<div class="quiz-result fail">❌ Результат: ${correct}/${quiz.questions.length} (${pct}%). Порог: ${quiz.pass}%. Осталось попыток: ${remaining}.<br>Повторите материал и попробуйте снова.<br><button class="quiz-start-btn" style="margin-top:10px" onclick="resetQuiz('${moduleId}')">🔄 Попробовать снова</button></div>`;
+  } else {
+    resultHtml = `<div class="quiz-result fail">❌ Результат: ${correct}/${quiz.questions.length} (${pct}%). Все попытки исчерпаны. Обратитесь к ментору для сброса модуля.</div>`;
+    // Notify in Google Sheets
+    sendQuizFail(moduleId, pct);
+  }
+  document.getElementById('quizResultBlock').innerHTML = resultHtml;
+
+  // Send result to Google Sheets
+  try {
+    await fetch(SHEETS_URL, {method:'POST', body: JSON.stringify({
+      type:'quiz', name: currentUser.name, login: currentUser.login,
+      module: quiz.title, score: pct, passed: passed, attempt: state.attempts,
+      date: new Date().toLocaleString('ru-RU')
+    })});
+  } catch(e){}
+}
+
+function resetQuiz(moduleId){
+  quizState[moduleId].selected = {};
+  showQuiz(moduleId);
+}
+
+async function sendQuizFail(moduleId, pct){
+  try {
+    await fetch(SHEETS_URL, {method:'POST', body: JSON.stringify({
+      type:'quiz_fail', name: currentUser.name, login: currentUser.login,
+      module: QUIZZES[moduleId].title, score: pct,
+      date: new Date().toLocaleString('ru-RU')
+    })});
+  } catch(e){}
+}
+
+// ===== UTILS =====
+function showSalesTab(id, btn){
+  document.getElementById('sst-coldcall').style.display = id==='coldcall'?'block':'none';
+  document.getElementById('sst-gatekeeper').style.display = id==='gatekeeper'?'block':'none';
+  document.querySelectorAll('#page-salesscripts .sp-btn').forEach(b=>b.classList.remove('act'));
+  if(btn) btn.classList.add('act');
+  // Init objections on first open
+  if(id==='coldcall' && !document.getElementById('coldCallObjTabs').innerHTML){
+    setupColdCallObj();
+  }
+}
+
+const COLD_CALL_OBJ = [
+  {label:'«Не интересно»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Нам не интересно / нам не нужно.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понимаю. Можно один вопрос? Вы говорите «не интересно» — это потому что уже есть надёжный канал поставки?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Ну, поставщик есть.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Именно. Тогда я и не говорю про замену — я говорю про подстраховку. У нас треть клиентов пришли с той же фразой. Давайте встретимся на 15 минут — покажу позиции и цены. В среду или в четверг удобнее?</div>
+    <div class="line-tip">«Не интересно» в 90% случаев — защитная реакция, не отказ.</div>`},
+  {label:'«Есть поставщик»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>У нас уже есть поставщик, работаем с ними давно.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Отлично — долгосрочные отношения это ценно. Именно поэтому не предлагаю ничего менять. Единственный вопрос: бывало ли так, что нужная позиция заканчивалась или срок поставки растягивался?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Ну, бывает иногда.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Вот именно под этот «иногда» мы и работаем. Склад в Ташкенте, отгрузка день-в-день. Не конкурент — просто страховка. Встретимся на 15 минут? В четверг утром удобно?</div>
+    <div class="line-tip">НИКОГДА не атакуйте текущего поставщика.</div>`},
+  {label:'«Пришлите на почту»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Пришлите информацию на почту, посмотрим.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Конечно, пришлю. И всё же — письма теряются. Давайте сделаю иначе: пришлю, и через два дня наберу вас на пять минут — убедиться что дошло и ответить на вопросы. Записываю email.</div>
+    <div class="line-tip">«Пришлите на почту» — вежливое «до свидания». Нейтрализуется через обязательство перезвонить.</div>`},
+  {label:'«Нет времени»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Сейчас занят / нет времени говорить.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понимаю, не буду задерживать. Скажите — когда удобнее: сегодня после трёх или завтра с утра?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Завтра.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Отлично. Набираю вас завтра в [время]. Договорились, [имя].</div>
+    <div class="line-tip">Не «когда можно перезвонить?» — давайте альтернативу: сегодня или завтра.</div>`},
+  {label:'«Дорого»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Скорее всего дорого. Сколько стоит?</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Цена зависит от объёма и ассортимента — у нас нет единого прайса «для всех», считаем под каждого клиента. За 15 минут встречи я пойму ваш объём и дам конкретную цифру. По опыту — мы конкурентоспособны, особенно на регулярных отгрузках. Сегодня или завтра удобнее?</div>
+    <div class="line-tip">Цена по телефону — ловушка. Встреча = время подготовить предложение под объём с реальной скидкой.</div>`},
+  {label:'«Перезвоните позже»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Перезвоните через месяц / позже.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Хорошо, [имя], зафиксирую. Только уточните — «через месяц» это потому что сейчас активный период, или потому что уже закупились?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Да, закупились уже.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понятно. Тогда наберу вас за две недели до следующей закупки. И пока — отправлю прайс сегодня, чтобы он уже был перед глазами. Telegram удобен?</div>
+    <div class="line-tip">«Перезвоните позже» часто — «не знаю как отказать». Уточнение переводит в конкретный план с датой.</div>`},
+  {label:'«Не меняем»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Мы принципиально не меняем поставщиков.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Уважаю это. Скажите — этот принцип потому что текущий поставщик ни разу не подводил, или потому что менять — лишние хлопоты?</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Компании у которых «всё устраивает» — именно те, кому мы нужны как резервный партнёр. Когда у вашего поставщика что-то идёт не так — вы хотите тогда искать альтернативу, или иметь готовый вариант под рукой? Давайте просто познакомимся — 15 минут, без обязательств.</div>
+    <div class="line-tip">Превратить «не меняем» в «запасной вариант».</div>`},
+  {label:'«Не я решаю»', content:`
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>Я не принимаю решения по закупкам.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Понял, спасибо что сказали. Подскажите — кто в компании занимается закупкой масел и расходников? Как его зовут?</div>
+    <div class="line-k"><div class="who who-k">КЛИЕНТ</div>[Имя ЛПР]</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР</div>Спасибо. Не затруднит соединить с [имя ЛПР]? Скажу, что звоню по вашей рекомендации.</div>
+    <div class="line-m"><div class="who who-m">МЕНЕДЖЕР (при выходе на ЛПР)</div>Добрый день, [имя ЛПР]. Меня зовут [имя], OIL GROUP. Ваш коллега [имя] посоветовал обратиться к вам напрямую — по вопросу поставки масел. Буквально три минуты — удобно говорить?</div>
+    <div class="line-tip">«Звоню по рекомендации коллеги» снимает барьер холодного звонка.</div>`},
+];
+
+function setupColdCallObj(){
+  const tabs = document.getElementById('coldCallObjTabs');
+  const content = document.getElementById('coldCallObjContent');
+  if(!tabs || !content) return;
+  tabs.innerHTML = COLD_CALL_OBJ.map((o,i)=>`<button class="ot-btn${i===0?' sel':''}" onclick="showColdCallObj(${i},this)">${o.label}</button>`).join('');
+  content.innerHTML = COLD_CALL_OBJ[0].content;
+}
+
+function showColdCallObj(i, btn){
+  document.getElementById('coldCallObjContent').innerHTML = COLD_CALL_OBJ[i].content;
+  document.querySelectorAll('#coldCallObjTabs .ot-btn').forEach(b=>b.classList.remove('sel'));
+  if(btn) btn.classList.add('sel');
+}
+
+function togglePass(){
+  const inp = document.getElementById('passInput');
+  const btn = document.getElementById('eyeBtn');
+  if(inp.type === 'password'){
+    inp.type = 'text';
+    btn.style.color = '#C9A84C';
+  } else {
+    inp.type = 'password';
+    btn.style.color = '#aaa';
+  }
+}
+
+function switchPdf(idx){
+  document.querySelectorAll('[id^="pdfframe-"]').forEach((f,i)=>{
+    f.classList.toggle('pdfhide', i!==idx);
+  });
+  document.querySelectorAll('[id^="pdftab-"]').forEach((b,i)=>{
+    b.classList.toggle('act', i===idx);
+  });
+}
+
+function toggleCl(el){
+  el.classList.toggle('chk');
+  el.textContent = el.classList.contains('chk') ? '✓' : '';
+}
+</script>
+</body>
+</html>
